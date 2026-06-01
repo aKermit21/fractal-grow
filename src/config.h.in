@@ -1,0 +1,42 @@
+#pragma once
+
+#include <array>
+#include <string_view>
+
+// In case of NOT using meson build
+// fill manually below two strings and rename file to config.h
+# define PROJECT_STR "@my_project@"
+# define VERSION_STR "@proj_version@"
+
+inline constexpr std::string_view cFullProgramName { "Exponentially Growing Fractal Leaf"};
+
+// Paths configuration
+// possible to be modified if building on other than Unix-like system
+namespace cPath {
+  inline constexpr std::string_view cFont_file_str = "text_fonts.ttf";
+
+  // Possible locations of fonts file (otherwise current directory)
+  inline constexpr std::array<std::string_view, 4> cFontSubdirs = {{
+    "fonts/", "../fonts/",
+    // linux standard user installation of data by meson using --prefix $HOME/.local
+    "$HOME/.local/share/" PROJECT_STR "/", 
+    // linux standard system installation of data by meson (without prefix)
+    "/usr/local/share/"  PROJECT_STR  "/" }}; 
+  
+  // Default snapshot / configuration file
+  inline constexpr std::string_view cDefaultSnapshot { PROJECT_STR "-cfg.toml"};
+  
+  // Possible locations of config file (otherwise current directory)
+  inline constexpr std::array<std::string_view, 3> cLogSubdirs = {{
+    "config/", "../config/",
+    // linux standard user installation of data by meson using --prefix $HOME/.local
+    "$HOME/.local/share/" PROJECT_STR "/" }};
+
+  // Possible locations of image files (otherwise current directory)
+  inline constexpr std::array<std::string_view, 3> cImageSubdirs = {{
+    "image/", "../image/",
+    // linux standard user installation of data by meson using --prefix $HOME/.local
+    "$HOME/.local/share/" PROJECT_STR "/" }};
+}
+
+// More configuration data in fractal.h

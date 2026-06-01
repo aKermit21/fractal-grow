@@ -1,0 +1,19 @@
+# Ignore all these files in any subdirectory
+**.exe
+**.out
+**.log
+**.o
+**.bkp
+**/run.bat
+**/cmp.bat
+# contents of this subdirectory - seems clangd runtime
+.idea/
+# build directories
+**/build
+**/build-*
+# subproject build
+subprojects/tomlplusplus-3.4.0
+# other directories
+log/*.txt
+**/.cache
+**/packagecache

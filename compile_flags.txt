@@ -1,0 +1,7 @@
+-xc++
+-Isrc
+-Ibuild-mes-dev
+-Isubprojects/tomlplusplus-3.4.0/include
+-Isubprojects/Lyra/include
+-std=c++17
+-Wall
