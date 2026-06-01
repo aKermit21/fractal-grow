@@ -43,20 +43,21 @@ Below is a complete list of key functions:
 |              |                                                  |
 | Page Up      | Speed up drawing (less detail)                   |
 | Page Down    | Slow down drawing (more detail)                  |
+
 # Preceding Project
 
 This project is based on [fractal-anim](https://github.com/aKermit21/fractal-anim.git) by the same author. Both can use the same initial configuration file(s). (In fact, the previous project was used to design the initial fractal leaf shapes and colors.)
 
 # Installation
 ## Dependencies
-- **SFML** (sfml-graphics) — *to be installed manually beforehand*
+- **SFML** (sfml-graphics) — to be installed *manually* beforehand
 - lyra (C++ arg parser) — embedded as a subproject (see lyra source)
 - tomlplusplus — embedded as a subproject
 
 ## Get the Project
 Clone the GitHub project:
 ```shell
-git clone <repository-url>
+git clone https://github.com/aKermit21/fractal-grow.git
 ```
 
 ## Compilation
@@ -76,6 +77,29 @@ meson compile
 meson configure --prefix=$HOME/.local   # optionally, for Linux LOCAL installation
 meson install
 ```
+Manually copy the other images (`../image/*.jpg`) to the same location where the `Galaxy.jpg` file was copied.
+
+To install the toml++ shared library in the system (which will NOT be installed automatically as a subproject):
+
+### Use a Package Manager
+For example, with pacman:
+```shell
+sudo pacman -S tomlplusplus
+```
+
+### Perform a Custom Build
+One can also build and install it manually:
+
+```shell
+cd ../subprojects/tomlplusplus-3.4.0
+mkdir build-lib/
+meson setup build-lib/
+cd build-lib/
+meson install
+[sudo ldconfig]   # update library cache
+exfra [-h]     # now shall run from any location
+```
+Note that adding a custom library path may then be needed.
 
 ## Running
 
@@ -100,5 +124,9 @@ meson setup build-dev/
 cd build-dev/
 meson configure --buildtype=custom --optimization=2
 ```
-
 This will enable assertions and extensive logging.
+
+## Screenshots
+![Game Over](doc/Game-over.png "Game Over")
+
+![Demo Runnning](doc/Demo-running.png "Demo running")
