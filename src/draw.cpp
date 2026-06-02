@@ -21,8 +21,7 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
 
-void Element::draw_stem(sf::RenderWindow &win, long order, const bool freezeTime,
-                        const bool displayCore) {
+void Element::draw_stem(sf::RenderWindow &win, long order, const bool displayCore) {
 
   // 90 deg transition vec / light vec
   if (stem_xy.light_vec_angle_flip()) {
@@ -38,7 +37,7 @@ void Element::draw_stem(sf::RenderWindow &win, long order, const bool freezeTime
     stem_xy.prev_l_angle = lAngleUnknown;
     stem_xy.flash_cnt = 0;
   // Time freeze option (stop type)
-  } else if ((stem_xy.flash_cnt > 0) and (!freezeTime)) {
+  } else if (stem_xy.flash_cnt > 0) {
     // keep flash effect for some time
     --stem_xy.flash_cnt;
   } else { }

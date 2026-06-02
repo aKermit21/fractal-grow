@@ -150,8 +150,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   autoscale.findMinMax(parent_ptr->stem_xy.vec_xy);
 
   // Draw the element
-  parent_ptr->draw_stem(win, level, algo_anim.ifFreezeTimeStopActive(),
-                        algo_anim.isCoreElemDisplay());
+  parent_ptr->draw_stem(win, level, algo_anim.isCoreElemDisplay());
 
   if (level > cFrac::NrOfOrders) { 
     Dbg::report_once(Dbg::onceLevelsTotal, level);

@@ -9,22 +9,18 @@
 
 #pragma once
 
-#include "fractal.h"
 #include "transform.h"
 #include "dbg_report.h"
 
 //
-// Stop animation, Freeze light
+// Pause animation, Display Core Elements (C-key)
 
 struct StopFlash : TranAlg {
 
-  enum StopType { freezeTimeStop, justStop, endOfStopList};
-
   StopFlash(int speed=8) 
     : TranAlg{ speed }
-    , stopAtZero { false }
-    , stopType {justStop }
-    , coreElementDisplayRequested { false }
+    , mStopActive { false }
+    , mCoreElementDisplayRequested { false }
   {
     Dbg::report_info("Init: StopFlash  (speed=)", speed);
   }
@@ -39,18 +35,12 @@ struct StopFlash : TranAlg {
 
   bool isCoreElemDisplay() const;
 
-  bool ifFreezeTimeStopActive() const;
-
-  // Make flash light temporary effect
+  // End of Pause/Stop
   void resumeTimeFlow();
-
-  // end of Closing animation
-  bool stopAtZero;
 
 private:
     
-  StopType stopType;
+  bool mStopActive;
   
-  bool coreElementDisplayRequested;
-  
+  bool mCoreElementDisplayRequested;
 };

@@ -181,8 +181,7 @@ struct Element {
   // - method for static (single frame) drawing
   void transform_vec_stem(const MovFluctuate & algo_fluct,
                           const std::optional<float> overrideScale);
-  virtual void draw_stem(sf::RenderWindow & win, long level,
-                         const bool freezeTime, const bool coreElemt);
+  virtual void draw_stem(sf::RenderWindow & win, long level, const bool coreElemt);
   void initPrimary();   // Init data for first element 
 };
 

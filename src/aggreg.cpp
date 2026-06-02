@@ -74,7 +74,6 @@ void MainProgAggr::oneStepCfgChange() {
  
 void MainProgAggr::resetConfig(bool keyAction) {
   movFluctuate.resumeTimeFlow(); 
-  movFluctuate.stopAtZero = false;
   // Mutational grow algo reset
   MutGrow::resetAlgo();
   // Release Memory resources
@@ -184,7 +183,8 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     movFluctuate.pauseWind();
     // Stop mutations (temporary)
     MutGrow::stopAlgo(false);
-    // TODO: Stop frames cnt and and start pause counting time
+    // TODO: Stop frames cnt and and start pause counting time and frame
+    // TODO: use stop_flash module
     // print current speed scale for # of frames
     logtxt.startSpeedDraw();
     m_PauseActive = true;

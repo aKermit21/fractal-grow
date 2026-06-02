@@ -8,10 +8,7 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "stop_flash.h"
-#include "fractal.h"
-#include "transform.h"
 #include "demo_func.h"
-#include "aux_func.h"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
@@ -23,12 +20,12 @@ bool StopFlash::key_decodation(sf::Keyboard::Key key) {
   switch (key) {
   // Core Elements are linking from primary element to top mutation
   case sf::Keyboard::Key::C: 
-    if (coreElementDisplayRequested) {
+    if (mCoreElementDisplayRequested) {
       // switch off
-      coreElementDisplayRequested = false;
+      mCoreElementDisplayRequested = false;
     } else {
       // switch on
-      coreElementDisplayRequested = true;
+      mCoreElementDisplayRequested = true;
     }
     return true;
 
@@ -40,29 +37,17 @@ bool StopFlash::key_decodation(sf::Keyboard::Key key) {
 
 
 bool StopFlash::isCoreElemDisplay() const {
-  return coreElementDisplayRequested;
+  return mCoreElementDisplayRequested;
 }
 
 
-// Freeze (time) or Stop animation
+// Stop (pause) animation
 void StopFlash::stopFreezeAnimation() {
-  if (justStop == stopType) {
-    // First Stop - freeze time
-    stopType = freezeTimeStop;
-  }
-  else {
-    // Second Stop
-    resumeTimeFlow();
-  }
+  mStopActive = true;
 }
 
-
-bool StopFlash::ifFreezeTimeStopActive() const {
-  if (stopType == freezeTimeStop) return true;
-  else return false;
-} 
 
 void StopFlash::resumeTimeFlow() {
-  stopType = justStop; // No freezeTimeStop
+  mStopActive = false;
 }
 
