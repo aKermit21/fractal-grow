@@ -21,7 +21,7 @@
 bool MutGrow::mMutEnabled {true}; // Enable Mutational Grow
 int MutGrow::mGlobalExcited {0};
 int MutGrow::growingCntr = 0;
-unsigned long MutGrow::growPtrsCnt; 
+long MutGrow::growPtrsCnt; 
 std::vector<std::unique_ptr<MutGrow>> MutGrow::allMutGrowPtrs {};
 
 
@@ -155,6 +155,9 @@ void MutGrow::handleGrowMutationStep(void) {
           ++mGlobalExcited; // this will make autoscale faster
           assert((mGlobalExcited < 1000) and "Too much active excite stems");
         } 
+        [[fallthrough]];  // intentional lack of break as below action is common
+      case growingOngoingPause:
+        // Do not consider Paused growing for possible excite
         // Keep growing
         if (ptr->growingFraction < ptr->growingFractionMax) {
           ptr->growingFraction += ptr->growingFractionStep;
@@ -175,18 +178,26 @@ void MutGrow::handleGrowMutationStep(void) {
 }
 
 
-// Stop Algo for End of Game or Pause
-void MutGrow::stopAlgo() {
+// Stop Algo for End of Game (permanent = true) or Pause
+void MutGrow::stopAlgo(bool permanent) {
   mMutEnabled = false;  
 
-  // Put all nodes to growing finished (usually only last may be still growing)
   for (auto& ptr : allMutGrowPtrs) {
     if (!ptr) {
       assert(false);
-      return;
+      continue;
     }
-    // End of Grow
-    ptr->growingState = growingFinished;
+    if (permanent) {
+      // Put all nodes to growing finished (usually only last may be still growing)
+      // to permanently STOP it - End of Grow
+      ptr->growingState = growingFinished;
+    } else {
+      // Pausing growing element results in lost of possibility of excite
+      // to prevent cheeting
+      if (ptr->growingState == growingOngoing) {
+        ptr->growingState = growingOngoingPause;
+      }
+    }
   }
 }
 

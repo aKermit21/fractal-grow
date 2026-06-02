@@ -23,7 +23,7 @@
 // and initialize with structural data
 bool new_elements_creation(Element * const parent_ptr, const long level)
 {
-  static unsigned long recur_funct_cnt { 0 };
+  static long recur_funct_cnt { 0 };
 
   if (level > cFrac::NrOfOrders) { 
     assert((level <= cFrac::NrOfOrders) and

@@ -2,8 +2,8 @@
 **Exponentially Growing Fractal Leaf — Animation, Game**
 
 # Principle
-Elements of a leaf-shaped fractal are drawn recursively by applying a defined transformation that turns the largest element into progressively smaller ones.  
-However, from time to time, one of the existing elements undergoes a spontaneous *mutation*. It begins to gradually grow, along with all of its subordinate elements. This creates — or rather modifies — a branch, which ends up usually larger than its predecessor.  
+Elements of a leaf-shaped fractal are drawn recursively by applying a defined transformation that turns the largest element into progressively smaller ones.
+However, from time to time, one of the existing elements undergoes a spontaneous *mutation*. It begins to gradually grow, along with all of its subordinate elements. This creates — or rather modifies — a branch, which ends up usually larger than its predecessor.
 After a short time, the mutation process repeats itself within the already mutated branch.
 
 As a result, the fractal structure grows upward exponentially, and the frame rescales to cover more and more area. The structure starts from 24 cm, which is roughly the initial structure size on the screen.
@@ -61,6 +61,7 @@ git clone https://github.com/aKermit21/fractal-grow.git
 ```
 
 ## Compilation
+Below procedure was tested using Linux.  
 It is recommended to use the Meson build system, as it verifies dependencies, handles subprojects, enables automatic configuration, and supports explicit installation.
 
 ```shell
@@ -126,7 +127,7 @@ meson configure --buildtype=custom --optimization=2
 ```
 This will enable assertions and extensive logging.
 
-## Screenshots
+# Screenshots
 ![Game Over](doc/Game-over.png "Game Over")
 
 ![Demo Runnning](doc/Demo-running.png "Demo running")

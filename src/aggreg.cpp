@@ -54,8 +54,8 @@ void MainProgAggr::oneStepCfgChange() {
       MutGrow::handleGrowMutationStep();
     }
   } else {
-    // Stop Mutations
-    MutGrow::stopAlgo();
+    // End of Game: Stop Mutations permanently
+    MutGrow::stopAlgo(true);
     // Reset only once to allow some manual actions after End of Game
     static bool endOnce {false};
     if (!endOnce) {
@@ -65,7 +65,7 @@ void MainProgAggr::oneStepCfgChange() {
       lightS.reset_light();
     }
   }
-  // dislay some animation like wind always
+  // Still dislay some animation like wind
   movFluctuate.one_step_cfg_change();
   colorPal.one_step_flash_reset();  
   lightS.one_step_light_resume(m_EndOfGame);
@@ -182,8 +182,8 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     // Stop both types of animation
     movFluctuate.stopFreezeAnimation(); // Freeze time or permanent Stop
     movFluctuate.pauseWind();
-    // Stop mutations
-    MutGrow::stopAlgo();
+    // Stop mutations (temporary)
+    MutGrow::stopAlgo(false);
     // TODO: Stop frames cnt and and start pause counting time
     // print current speed scale for # of frames
     logtxt.startSpeedDraw();

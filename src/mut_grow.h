@@ -55,7 +55,8 @@ struct MutGrow {
   constexpr static int cYmid { cFrac::WindowYsize / 2 }; 
   constexpr static int cGrowingSteps { 100 }; // assumed transitions steps
 
-  enum MutGrowingState { growingStarting, growingOngoing, growingFinished };
+  enum MutGrowingState { growingStarting, growingOngoing, growingOngoingPause,
+                        growingFinished };
   
   // enum ColorExciteState { colorNotCaught, colorBeginCaught, colorEndCaught };
 
@@ -70,8 +71,8 @@ struct MutGrow {
   // Complete Reset
   static void resetAlgo();
 
-  // Stop Algo for End of Game or Pause
-  static void stopAlgo();
+  // Stop Algo for End of Game (permanent) or Pause
+  static void stopAlgo(bool permanent=false);
   
   static void resumeAlgo();
   
@@ -112,7 +113,7 @@ private:
   bool checkColorExcite(void);
   
   static int growingCntr; // counter for all
-  static unsigned long growPtrsCnt; // counting pointers
+  static long growPtrsCnt; // counting pointers
 
   static bool mMutEnabled;
 

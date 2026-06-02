@@ -310,7 +310,7 @@ sf::VertexArray LightS::create_rays_grid(sf::Vector2f lpos) {
 
 
 // Attenuate color
-sf::Color LightS::dim_color(sf::Color color, unsigned int percent) {
+sf::Color LightS::dim_color(sf::Color color, int percent) {
   sf::Color ret_color;
 
   ret_color.b = static_cast<std::uint8_t>((color.b * percent) / 100);

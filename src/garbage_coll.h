@@ -40,7 +40,7 @@ struct MemAndDebug : Dbg
 
   private:
 
-  static unsigned long elementPtrsCnt; 
+  static long elementPtrsCnt; 
   // Collection of Element pointers ownership
   static std::vector<std::unique_ptr<std::array<Element, cFrac::NrOfElements>>> allElementPtrs;
 };

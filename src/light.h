@@ -112,7 +112,7 @@ private:
   bool m_demoMode;
 
   // Attenuate color
-  sf::Color dim_color(sf::Color color, unsigned int percent); 
+  sf::Color dim_color(sf::Color color, int percent); 
   
   // Rotate rainbow (RGB)
   void rotate_rgb_color_updown(MoveColor move);

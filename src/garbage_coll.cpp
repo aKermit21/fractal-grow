@@ -14,7 +14,7 @@
 #include <memory>
 
 // Garbage collector static variables
-unsigned long MemAndDebug::elementPtrsCnt; 
+long MemAndDebug::elementPtrsCnt; 
 // Collection of pointers ownership
 std::vector<std::unique_ptr<std::array<Element, cFrac::NrOfElements>>> 
     MemAndDebug::allElementPtrs {};
@@ -49,8 +49,9 @@ void MemAndDebug::release_all(){
   MutGrow::releaseAll();
   
   // Release all Elements (manually) in reverse order
-  for (auto rit { MemAndDebug::allElementPtrs.rbegin() }; rit != MemAndDebug::allElementPtrs.rend(); ++rit)  {
-    rit->reset();  // release allocated data
+  for (auto rit { MemAndDebug::allElementPtrs.rbegin() };
+    rit != MemAndDebug::allElementPtrs.rend(); ++rit)  {
+      rit->reset();  // release allocated data
   }
   allElementPtrs.clear();  // clear vector itself
   elementPtrsCnt = 0;
