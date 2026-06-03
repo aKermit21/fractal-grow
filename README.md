@@ -50,9 +50,9 @@ This project is based on [fractal-anim](https://github.com/aKermit21/fractal-ani
 
 # Installation
 ## Dependencies
-- **SFML** (sfml-graphics) — to be installed *manually* beforehand
-- lyra (C++ arg parser) — embedded as a subproject (see lyra source)
-- tomlplusplus — embedded as a subproject
+- **SFML** (sfml-graphics) — to be installed *manually* beforehand (see [sfml website](https://www.sfml-dev.org/))
+- lyra (C++ arg parser) — embedded as a subproject (see [original lyra source](https://github.com/bfgroup/Lyra))
+- tomlplusplus — embedded as a subproject (also available through package managers)
 
 ## Get the Project
 Clone the GitHub project:
@@ -61,7 +61,7 @@ git clone https://github.com/aKermit21/fractal-grow.git
 ```
 
 ## Compilation
-Below procedure was tested using Linux.  
+The procedure below was tested on Linux.
 It is recommended to use the Meson build system, as it verifies dependencies, handles subprojects, enables automatic configuration, and supports explicit installation.
 
 ```shell
