@@ -10,7 +10,7 @@
 #include "opt_lyra.h"
 #include "config.h"
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include <iostream>
 
 OptParams optParse(int argc, const char** argv)

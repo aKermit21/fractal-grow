@@ -9,7 +9,7 @@
 
 #include "text_draw.h"
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include "config.h"
 #include "progress.h"
 #include "mut_grow.h"

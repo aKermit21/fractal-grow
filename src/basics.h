@@ -81,6 +81,10 @@ struct Vec2D {
 
   // had angle between light rays and (this) vec changed (<90 vs >90 deg)
   bool light_vec_angle_flip();
+
+  // to small vector size to draw (compared to given threshols)
+  bool vecTooSmall(float lengthThreshold);
+
 private:
   template<typename T> // typically float or double
   void rotation_matrix(const T sin_val,
@@ -159,19 +163,20 @@ using T_Fluctuate_Algo_Arr = std::array<T_Algo_Arr, cFrac::NrOfOrders +1>;
 struct MutGrow;
 // Another Forward declaration (see fluctuate.h)
 struct MovFluctuate;
-
+// Another Forward declaration - internal
+struct ChildrenElementsCluster ;
+  
 /* Single Element of Fractal */
 struct Element {
   int order { 0 }; // nesting level
   long int index {};     //  position within current branch - 1..cTran::NrOfElements
-  // std::optional<DRec> exceptionalRule {std::nullopt};
   BranchType b_type = firstBranch; // First branch valid only for first element
   // vetor / delta coordinates / stem thickness / Flash Light
   StemFlash stem_xy;   
   // Attached up/downside child elements (of next order)
   // in form of link list
-  std::array<Element, cFrac::NrOfElements> * children_down {};
-  std::array<Element, cFrac::NrOfElements> * children_up {};
+  ChildrenElementsCluster * children_down {};
+  ChildrenElementsCluster * children_up {};
   // Link to parent (single one)
   Element * parent_ptr {}; // pointer to previous already existing object
   MutGrow * mutationGrowPtr {};
@@ -185,4 +190,10 @@ struct Element {
   void initPrimary();   // Init data for first element 
 };
 
+// Cluster of Children - either up or down
+struct ChildrenElementsCluster {
+  // Parent is common for all Elements in Cluster
+  bool toBePruned {false}; // marked to be deallocated by pruning method
+  std::array<Element, cFrac::NrOfElements> elements;
+};
 

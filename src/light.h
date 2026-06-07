@@ -10,7 +10,7 @@
 #pragma once
 
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/VertexArray.hpp>

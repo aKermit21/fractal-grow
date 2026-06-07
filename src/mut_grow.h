@@ -10,7 +10,7 @@
 #pragma once
 
 #include "colors.h"
-#include "fractal.h"
+#include "basics.h"
 #include "match_col.h"
 #include <cassert>
 

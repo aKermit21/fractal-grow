@@ -13,7 +13,7 @@
 #include "colors.h"
 #include "dbg_report.h"
 // #include "toml++/impl/forward_declarations.hpp"
-#include "fractal.h"
+#include "basics.h"
 #include "toml++/toml.hpp"
 #include <bitset>
 

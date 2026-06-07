@@ -7,7 +7,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "fractal.h"
+#include "basics.h"
 #include "aggreg.h"
 #include "autoscale.h"
 #include "mut_grow.h"
@@ -39,7 +39,7 @@ int main(int argc, const char** argv)
     else { /* continue */ }
   
     // Collecting errors, warning, info (trace); also Garbage collector: memory management
-    MemAndDebug dbg;
+    MemAndDebug memDbg;
     // Auto (re)scalling
     AutoScale autoScale;
 
@@ -113,9 +113,10 @@ int main(int argc, const char** argv)
         fractMain.oneStepCfgChange();
         // also possible demo generation step
         fractMain.demoGenerator();
+        // Remove not used memory
+        memDbg.pruneElementsClusterVector(200);
       }
     }
-
   }
   catch (const char * exception) {
     std::cerr << "Exception (Fatal Error): " << exception << std::endl;

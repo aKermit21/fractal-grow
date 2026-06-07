@@ -9,7 +9,7 @@
 
 #include "fluctuate.h"
 #include "stop_flash.h"
-#include "fractal.h"
+#include "basics.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <cstdlib>
 #include <algorithm>

@@ -12,7 +12,7 @@
 #include "dbg_report.h"
 #include "stop_flash.h"
 #include "colors.h"
-#include "fractal.h"
+#include "basics.h"
 #include "light.h"
 #include "mut_grow.h"
 #include "demo_func.h"
@@ -57,9 +57,7 @@ void MainProgAggr::oneStepCfgChange() {
     // End of Game: Stop Mutations permanently
     MutGrow::stopAlgo(true);
     // Reset only once to allow some manual actions after End of Game
-    static bool endOnce {false};
-    if (!endOnce) {
-      endOnce = true;
+    if (!m_EndOfGame) {
       m_EndOfGame = true;
       // Reset light to middle position
       lightS.reset_light();

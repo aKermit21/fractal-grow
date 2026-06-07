@@ -9,7 +9,7 @@
 
 #include "autoscale.h"
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include "transform.h"
 
 using VecMinMax = Dbg::VecMinMax;

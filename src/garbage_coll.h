@@ -7,8 +7,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "mut_grow.h"
-#include "fractal.h"
+#include "basics.h"
 #include "dbg_report.h"
 #include <iostream>
 #include <memory>
@@ -18,8 +17,9 @@
 // Dbg: Collects and reports debug info from every other class
 struct MemAndDebug : Dbg
 {
-  MemAndDebug(){
-    elementPtrsCnt = 0;
+  MemAndDebug()
+  {
+    mElementPtrsCnt = 0;
   }
   // explicit destructor always virtual: learncpp 25.4
   virtual ~MemAndDebug(){
@@ -29,21 +29,26 @@ struct MemAndDebug : Dbg
   }
 
   // Add ownership pointer to the collection
-  static void collectElementPtr(std::unique_ptr<std::array<Element, cFrac::NrOfElements>> ptr);
-  
-  // static void collectGrowPtr(std::unique_ptr<ExcGrow> ptr);
+  static void collectElementPtr(std::unique_ptr<ChildrenElementsCluster> ptr);
 
   // Explicit release all allocated data from the collection
   static void release_all(void);
 
   static long getElPtrsCnt(void);
 
-  private:
+  // make 2, 3 stages of Pruning every # cycle
+  static void pruneElementsClusterVector(int cycle);
 
-  static long elementPtrsCnt; 
+private:
+
+  // 1st stage - only marking
+  static void prunePreperationsCluster(void);
+  // 2st stage - deallocate all marked
+  static void pruneDeallocateCluster(void);
+  
+  static long mElementPtrsCnt; 
+
   // Collection of Element pointers ownership
-  static std::vector<std::unique_ptr<std::array<Element, cFrac::NrOfElements>>> allElementPtrs;
+  // static std::vector<std::unique_ptr<std::array<Element, cFrac::NrOfElements>>> allElementPtrs;
+  static std::vector<std::unique_ptr<ChildrenElementsCluster>> allElementPtrs;
 };
-
-// extern GarbColl gc;
-

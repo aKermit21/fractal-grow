@@ -10,7 +10,7 @@
 #pragma once
 
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include "assert.h"
 
 // Transformation Algorithm Configuration data

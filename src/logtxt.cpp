@@ -11,7 +11,7 @@
 #include "cfg_toml.h"
 #include "config.h"
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include "text_draw.h"
 #include "transform.h"
 #include <SFML/Graphics/RenderWindow.hpp>

@@ -9,7 +9,7 @@
 
 #include "colors.h"
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include "light.h"
 #include "demo_func.h"
 #include <SFML/Config.hpp>

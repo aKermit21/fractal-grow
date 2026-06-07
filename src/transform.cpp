@@ -10,7 +10,7 @@
 #include "transform.h"
 #include "dbg_report.h"
 #include "fluctuate.h"
-#include "fractal.h"
+#include "basics.h"
 #include "aux_func.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <cstdlib>
@@ -78,9 +78,12 @@ void Element::transform_vec_stem(const MovFluctuate & fluctuate,
     } else {
       fraction = algo_fluct.at(order).at(arr_index).repos; 
       scale = algo_fluct.at(order).at(arr_index).scale;
+      assert((scale < 1.0) and
+             "scale>=1 will created immediately infinite fractal");
       // Exceptional scaling - additional grow
       if (overrideScale.has_value()) {
         scale *= *overrideScale;
+        assert(coreElement and "override scale only to coreElement");
         // Dbg::report_info("Exceptional scaling: ", static_cast<long>(scale*1000L));
       }
       if (b_type == upBranch) {
@@ -110,6 +113,8 @@ void Element::transform_vec_stem(const MovFluctuate & fluctuate,
     // dbg.report_trace("  rotation at angle", angle);
   }
 }
+
+
 
 // rather obsolete as only one hardcoded configuration is used
 void TranAlg::rotate_pre_cfg(){
@@ -178,4 +183,12 @@ T_Algo_Arr TranAlg::conv_to_assym(T_Algo_Arr_Symm symm_algo) {
   }
   return assym_algo;
 }
+
+
+// to small vector size to draw (compared to given threshols)
+bool Vec2D::vecTooSmall(float lengthThreshold) {
+  float vecLenght2 = (dx*dx) + (dy*dy);
+  return (vecLenght2 < (lengthThreshold*lengthThreshold));
+}
+
 

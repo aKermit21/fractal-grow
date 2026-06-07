@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "fractal.h"
+#include "basics.h"
 #include "stop_flash.h"
 #include "opt_lyra.h"
 #include "stop_flash.h"
@@ -47,7 +47,7 @@ struct MovFluctuate : StopFlash {
   constexpr static int cInitGrowTillLevel {6};
   
   // Two possible fluctuation animations: shaking and (initial) growing
-  // See FluctuateState defined in fractal.h
+  // See FluctuateState defined in basics.h
   FluctuateState fluctuateState;
   
   // animation related keys handling

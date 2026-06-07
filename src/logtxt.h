@@ -10,7 +10,7 @@
 #pragma once
 
 #include "colors.h"
-#include "fractal.h"
+#include "basics.h"
 #include "opt_lyra.h"
 #include "text_draw.h"
 #include "cfg_toml.h"

@@ -12,7 +12,7 @@
 #include "aux_func.h"
 #include "colors.h"
 #include "dbg_report.h"
-#include "fractal.h"
+#include "basics.h"
 #include "toml++/impl/parse_error.hpp"
 #include "toml++/impl/parser.hpp"
 #include "transform.h"

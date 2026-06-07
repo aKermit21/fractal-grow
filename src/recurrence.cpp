@@ -9,7 +9,7 @@
 
 #include "autoscale.h"
 #include "mut_grow.h"
-#include "fractal.h"
+#include "basics.h"
 #include "dbg_report.h"
 #include "garbage_coll.h"
 #include "transform.h"
@@ -24,6 +24,8 @@
 bool new_elements_creation(Element * const parent_ptr, const long level)
 {
   static long recur_funct_cnt { 0 };
+
+  assert(parent_ptr);
 
   if (level > cFrac::NrOfOrders) { 
     assert((level <= cFrac::NrOfOrders) and
@@ -45,34 +47,36 @@ bool new_elements_creation(Element * const parent_ptr, const long level)
   }
   
   //Setup DOWN branch
-  auto u_ptr_down_temp { std::make_unique<std::array<Element, cFrac::NrOfElements>>() };
+  auto u_ptr_down_temp { std::make_unique<ChildrenElementsCluster>() };
   parent_ptr->children_down = u_ptr_down_temp.get(); // ordinary ptr to a structure
   // Move Unique Ptr ownership to dedicated (garbage) Collection
   MemAndDebug::collectElementPtr(std::move(u_ptr_down_temp));
   Dbg::count_elements(cFrac::NrOfElements);
   short ind;
   ind = 0;
-  for(auto it = parent_ptr->children_down->begin(); it != parent_ptr->children_down->end(); ++it ) {
+  parent_ptr->children_down->toBePruned = {false};
+  for(auto it = parent_ptr->children_down->elements.begin(); it != parent_ptr->children_down->elements.end(); ++it ) {
     it->order = level;
     it->b_type = downBranch;
     it->index = ++ind;  // 1..cFrac::NrOfElements
     it->stem_xy.prev_l_angle = lAngleUnknown;
-    it->parent_ptr = parent_ptr; // link to already existing parent
+    it->parent_ptr = parent_ptr; // backlink to already existing parent
   }
   
   // Setup UP branch
-  auto&& ptr_up_temp = std::make_unique<std::array<Element, cFrac::NrOfElements>>();
+  auto&& ptr_up_temp = std::make_unique<ChildrenElementsCluster>();
   parent_ptr->children_up = ptr_up_temp.get();  // ordinary ptr to a structure
   // Move Unique Ptr ownership to dedicated (garbage) Collection
   MemAndDebug::collectElementPtr(std::move(ptr_up_temp));
   Dbg::count_elements(cFrac::NrOfElements);
   ind = 0;
-  for(auto it = parent_ptr->children_up->begin(); it != parent_ptr->children_up->end(); ++it ) {
+  parent_ptr->children_up->toBePruned = {false};
+  for(auto it = parent_ptr->children_up->elements.begin(); it != parent_ptr->children_up->elements.end(); ++it ) {
     it->order = level;
     it->b_type = upBranch;
     it->index = ++ind;  // 1..cFrac::NrOfElements
     it->stem_xy.prev_l_angle = lAngleUnknown;
-    it->parent_ptr = parent_ptr; // link to already existing parent
+    it->parent_ptr = parent_ptr; // backlink to already existing parent
   }
   
   return true; // something created
@@ -135,10 +139,6 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   // Tranform this vector (base on settings copied from parent) to the new one 
   parent_ptr->transform_vec_stem(algo_anim, excGrowScale);
 
-  // Take approx vector length : |dx| + |dy| ~ sqrt(dx2 + dy2)
-  auto approx_vec =  std::abs(parent_ptr->stem_xy.vec_xy.dx) + 
-                     std::abs(parent_ptr->stem_xy.vec_xy.dy); 
-  
   // Find place for Grow Mutation if initial growing has finished
   if (!algo_anim.fluctuateState.growingActive) {
     if (MutGrow::possibleInitGrowMutation(parent_ptr, level)) {
@@ -166,7 +166,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   // Consider element size limits on going to deeper branch
   // If size below threshold do not continue with children,
   // except it is a Core Element (than it must be followed)
-  if ((approx_vec < TranAlg::s_SmallVect) and
+  if (parent_ptr->stem_xy.vec_xy.vecTooSmall(TranAlg::s_SmallVect) and
       (!parent_ptr->coreElement)) {
       return false; // do not go deeper 
   }
@@ -186,7 +186,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   }
 
   // Follow DOWN branch
-  for(auto it = parent_ptr->children_down->begin(); it != parent_ptr->children_down->end(); ++it ) {
+  for(auto it = parent_ptr->children_down->elements.begin(); it != parent_ptr->children_down->elements.end(); ++it ) {
     // Traverse next level
     // Propagate (copy) parent position/vector to child (vec_xy is overriten!)
     it->stem_xy.vec_xy = parent_ptr->stem_xy.vec_xy; 
@@ -194,7 +194,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   }
   
   // Follow UP branch
-  for(auto it = parent_ptr->children_up->begin(); it != parent_ptr->children_up->end(); ++it ) {
+  for(auto it = parent_ptr->children_up->elements.begin(); it != parent_ptr->children_up->elements.end(); ++it ) {
     // Traverse next level
     // Propagate (copy) parent position/vector to child (vec_xy is overriten!)
     it->stem_xy.vec_xy = parent_ptr->stem_xy.vec_xy; 
