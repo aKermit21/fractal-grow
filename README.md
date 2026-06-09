@@ -1,5 +1,7 @@
 # fractal-grow
-**Exponentially Growing Fractal Leaf — Animation, Game**
+**Cosmic Fractal — Animation, Game**
+
+more descriptive name: *Exponentially Growing Fractal Leaf*
 
 # Principle
 Elements of a leaf-shaped fractal are drawn recursively by applying a defined transformation that turns the largest element into progressively smaller ones.
@@ -50,7 +52,7 @@ This project is based on [fractal-anim](https://github.com/aKermit21/fractal-ani
 
 # Installation
 ## Dependencies
-- **SFML** (sfml-graphics) — to be installed *manually* beforehand (see [sfml website](https://www.sfml-dev.org/))
+- **SFML** (2D graphics and more) — to be installed *manually* beforehand (see [sfml website](https://www.sfml-dev.org/))
 - lyra (C++ arg parser) — embedded as a subproject (see [original lyra source](https://github.com/bfgroup/Lyra))
 - tomlplusplus — embedded as a subproject (also available through package managers)
 

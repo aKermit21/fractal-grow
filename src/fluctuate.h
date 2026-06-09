@@ -10,9 +10,8 @@
 #pragma once
 
 #include "basics.h"
-#include "stop_flash.h"
+#include "pause_core.h"
 #include "opt_lyra.h"
-#include "stop_flash.h"
 #include <cstddef>
 
 // Modification of Transformation Algorithm 

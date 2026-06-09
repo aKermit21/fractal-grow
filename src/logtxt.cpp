@@ -73,6 +73,10 @@ void LogText::snapshot_draw(sf::RenderWindow & win) {
   }
 }
 
+void LogText::pauseDraw(sf::RenderWindow & win) {
+  textDraw.pauseDraw(win);
+}
+
 // Present Optional info
 void LogText::developer_draw(sf::RenderWindow & win, TextDraw::DevData & devData) {
   if (m_developer_draw_active) {

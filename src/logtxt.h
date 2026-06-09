@@ -23,8 +23,8 @@
 struct LogText {
   explicit LogText(OptParams opts) 
     : file_opened { false } 
-    , cHelpDrawFrames {80}
-    , cPrintSpeedFrames {40}
+    , cHelpDrawFrames {110}
+    , cPrintSpeedFrames {60}
     , snapshot_file_str { opts.optSnapshot }    
     , loaded_snapshot_info_str {}
     , help_draw_cnt { 0 }
@@ -64,6 +64,7 @@ struct LogText {
 
   // Conditional draws
   void help_draw(sf::RenderWindow & win); 
+  void pauseDraw(sf::RenderWindow & win); 
   void speed_draw(sf::RenderWindow & win, int speed);
   void snapshot_draw(sf::RenderWindow & win); 
   void developer_draw(sf::RenderWindow & win, TextDraw::DevData & data); 

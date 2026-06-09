@@ -15,11 +15,11 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <cstdlib>
 #include <optional>
-#include <sstream>
 #include <assert.h>
 
 // Small vector - below this size stop recursive search/draw of children
 float TranAlg::s_SmallVect;
+float TranAlg::s_SmallVectDefault;
 
 
 void Element::initPrimary() {

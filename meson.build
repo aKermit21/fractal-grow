@@ -6,7 +6,7 @@ project('fractal-grow', 'cpp',
 my_src = [
  'src/aux_func.cpp',
  'src/aggreg.cpp',
- 'src/stop_flash.cpp',
+ 'src/pause_core.cpp',
  'src/autoscale.cpp',
  'src/colors.cpp',
  'src/dbg_report.cpp',

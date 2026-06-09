@@ -55,12 +55,10 @@ bool MutGrow::possibleInitGrowMutation(Element * const ptrElement,
       or (growingCntr == 0)) {
 
     // Start from relatively lower nodes (to have proper size)
-    // if ((level > growingCntr*3) and (level <= 3+ growingCntr*3 )) {
     if (level <= 3+ growingCntr*3 ) {
     
       // Consider minimal size of element: 8 * default s_SmallVect.
-      // Fixed size threshold - see SpeedScalaData[<default-speed>] in transform.h
-      if (! ptrElement->stem_xy.vec_xy.vecTooSmall(8* 2.5f)) {
+      if (! ptrElement->stem_xy.vec_xy.vecTooSmall(8* TranAlg::s_SmallVectDefault)) {
     
         // consider only higher half of window
         if (ptrElement->stem_xy.vec_xy.y < cYmid) {

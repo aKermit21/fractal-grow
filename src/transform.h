@@ -24,8 +24,8 @@ namespace cTran {
 
 struct TranAlg {
 
-  TranAlg(int speed=10) 
-    : m_speedScale{ speed }
+  TranAlg(int speed=8) 
+    : m_speedScale { speed }
     , m_indexPre { 0 }
   {
     Dbg::report_info("Init: TranAlg (speed=) ", speed);
@@ -37,6 +37,7 @@ struct TranAlg {
 
     // Initial Speed vs Detailed drawing scale table
     speedScaleVerify(); // input: m_speedScale
+    s_SmallVectDefault = SpeedScalaData[m_speedScale];
   }
 
   // Transformation full algorithm data used by derived animation class(es)
@@ -48,6 +49,8 @@ struct TranAlg {
 
   // Small vector - below this size stop recursive search/draw of children
   static float s_SmallVect;
+  // Default of the above
+  static float s_SmallVectDefault;
 
   // rotate from one of the pre-calculated configuration
   // rather obsolete as only one hardcoded configuration is used

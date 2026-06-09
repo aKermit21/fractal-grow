@@ -139,6 +139,22 @@ void TextDraw::speed_draw(sf::RenderWindow &win, int speed) const {
   }
 }
 
+void TextDraw::pauseDraw(sf::RenderWindow & win) const {
+  constexpr static int cFontSize { 30 };
+
+  if (m_font_loaded) {
+    sf::Text text(m_font, "PAUSE", 30);
+    text.setStyle(sf::Text::Regular);
+    text.setFillColor(sf::Color::White);
+    text.setLineAlignment(sf::Text::LineAlignment::Right);
+    // Put text to top right corner
+    sf::Vector2f myPostion(cFrac::WindowXsize - cFontSize *3, cFontSize);
+    text.setPosition(myPostion);
+    // Draw it
+    win.draw(text);
+  }
+}
+
 
 void TextDraw::snapshot_draw(sf::RenderWindow &win, std::string & info) const {
   if (m_font_loaded) {

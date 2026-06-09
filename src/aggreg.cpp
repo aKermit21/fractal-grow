@@ -10,7 +10,7 @@
 #include "aggreg.h"
 #include "autoscale.h"
 #include "dbg_report.h"
-#include "stop_flash.h"
+#include "pause_core.h"
 #include "colors.h"
 #include "basics.h"
 #include "light.h"
@@ -44,13 +44,12 @@ void MainProgAggr::oneStepCfgChange() {
   SizePres progress = sizeCheckAndFormat(size);
   // Check for End of Game
   if (!progress.endOfGame) {
-    if (!movFluctuate.fluctuateState.growingActive) { // initial growing has finished
+    // initial growing has finished
+    if ((!movFluctuate.fluctuateState.growingActive) and
+        (!movFluctuate.isPauseActive())) {
       ++m_frame_cnt;
-      if (!m_TimeStarted) {
-        m_TimeStarted = true;
-        // Store the real game/demo start time after Initial grow has finished
-        m_StartTime = std::chrono::steady_clock::now();
-      }
+      // Store real start time after Initial grow has finished if not already started
+      movFluctuate.startTimeCounting();
       MutGrow::handleGrowMutationStep();
     }
   } else {
@@ -66,7 +65,7 @@ void MainProgAggr::oneStepCfgChange() {
   // Still dislay some animation like wind
   movFluctuate.one_step_cfg_change();
   colorPal.one_step_flash_reset();  
-  lightS.one_step_light_resume(m_EndOfGame);
+  lightS.one_step_light_resume(m_EndOfGame );
 }
 
  
@@ -84,10 +83,9 @@ void MainProgAggr::resetConfig(bool keyAction) {
   // Refresh flash color pallete
   colorPal.calc_flash_color_pallet(LightS::s_lightColor);
   colorPal.reset_flash_algo();
-  // resume time flow (temporary flash ligth effect) - if stopped
-  movFluctuate.resumeTimeFlow();
   // Stop display Config Info
   logtxt.stopSnapshotDraw();
+  movFluctuate.restartTimeCounting();
   m_frame_cnt = 0L;
   m_EndOfGame = false;
   m_TimeStarted = false;
@@ -124,6 +122,11 @@ void MainProgAggr::drawTopArtefacts(sf::RenderWindow & win,
   
   // Draw Help if requested
   logtxt.help_draw(win);
+
+  // Active Pause info
+  if (movFluctuate.isPauseActive()) {
+    logtxt.pauseDraw(win);
+  }
   
   // Draw Option Info
   // Provide additional info
@@ -137,7 +140,7 @@ void MainProgAggr::drawTopArtefacts(sf::RenderWindow & win,
   data.frames = m_frame_cnt;
   if (!m_EndOfGame) {
     // update game time as long as game is running
-    m_GameTime = std::chrono::steady_clock::now() - m_StartTime;
+    m_GameTime = movFluctuate.getTimeOfTheGame();
   }
   data.time = m_GameTime;
   logtxt.developer_draw(win, data);
@@ -177,12 +180,10 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
                                   Element& prim_element) {
   if (key == sf::Keyboard::Key::Space) {
     // Stop both types of animation
-    movFluctuate.stopFreezeAnimation(); // Freeze time or permanent Stop
+    movFluctuate.stopAnimation(); // Pause time flow
     movFluctuate.pauseWind();
     // Stop mutations (temporary)
     MutGrow::stopAlgo(false);
-    // TODO: Stop frames cnt and and start pause counting time and frame
-    // TODO: use stop_flash module
     // print current speed scale for # of frames
     logtxt.startSpeedDraw();
     m_PauseActive = true;
@@ -197,7 +198,8 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     movFluctuate.resumeTimeFlow();
     m_PauseActive = false;
   }
-  else if (key == sf::Keyboard::Key::F1) {
+  else if ((key == sf::Keyboard::Key::F1) or
+           (key == sf::Keyboard::Key::Escape)) {
     // Help text will be appearing for some time
     logtxt.startHelpDraw();
   } 
@@ -215,14 +217,12 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     movFluctuate.speedIncrement();
     // draw speed scale for next xx frames
     logtxt.startSpeedDraw();
-    movFluctuate.resumeTimeFlow();
   } 
   else if (key == sf::Keyboard::Key::PageDown) {
     // Decrease size thus speed
     movFluctuate.speedDecrement();
     // draw speed scale for next xx frames
     logtxt.startSpeedDraw();
-    movFluctuate.resumeTimeFlow();
   } 
   else if (key == sf::Keyboard::Key::E) {
     // Switch developer info drawing
@@ -232,7 +232,6 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     if (key == sf::Keyboard::Key::Grave) {
       // Additional global action in some cases
       colorPal.reset_flash_algo();
-      movFluctuate.resumeTimeFlow();
     }
     // Scan for subordinate classes key actions 
     bool keyFound = false;
@@ -254,7 +253,7 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     keyFound |= l_lightRet.lightMoved;
 
     // Key decodation successfull by some base functionality/class
-    if (keyFound) movFluctuate.resumeTimeFlow();
+    if (keyFound) {  }
   }
   
 }

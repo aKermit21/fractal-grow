@@ -67,13 +67,8 @@ void MemAndDebug::pruneElementsClusterVector(int cycle) {
   if ((counter % cycle) == 0) {
     // 1st stage - only marking Clusters
     prunePreperationsCluster();
+    // Actual Deallocation
     pruneDeallocateCluster();
-  }
-  else if ((counter % cycle) == (2*cycle/3)) {
-    // 2nd stage - Deallocating all marked
-    // pruneDeallocateCluster();
-  } else {
-    // do nothing
   }
 }
   
@@ -92,7 +87,8 @@ void MemAndDebug::prunePreperationsCluster(void) {
     bool cannotBeRemoved = false;
 
     // Check if parent (common to all elements) is CoreElement
-    // WARNING: Parent can be deallocated
+    // WARNING: Parent can be already deallocated
+    // that is processing must be done in right order or done in a single run.
     auto parent = ptr.get()->elements.at(0).parent_ptr;
     if (parent->coreElement) {
       cannotBeRemoved = true;
@@ -134,7 +130,7 @@ void MemAndDebug::prunePreperationsCluster(void) {
 void MemAndDebug::pruneDeallocateCluster(void){
   long pruneCounter {0};
   
-  // First pass: just identify what to prune
+  // First pass: just prepare list of what shall be pruned
   std::vector<size_t> toPruneIndices;
   for (size_t i = 0; i < allElementPtrs.size(); ++i) {
       if (allElementPtrs[i] and allElementPtrs[i]->toBePruned) {
@@ -142,13 +138,13 @@ void MemAndDebug::pruneDeallocateCluster(void){
       }
   }
 
-  // Second pass: reset them
+  // Second pass: reset them (Deallocate)
   for (auto idx : toPruneIndices) {
       allElementPtrs[idx].reset();
       ++pruneCounter;
   }
 
-  // TODO: Next step
+  // OPTIONALLY: As it takes considerable time
   // Erase not used ptr from vector
   // for (auto it = allElementPtrs.begin(); it != allElementPtrs.end(); ) {
   //     if (*it == nullptr) {
@@ -160,7 +156,9 @@ void MemAndDebug::pruneDeallocateCluster(void){
   
   // Update total counter
   mElementPtrsCnt -= pruneCounter;
-  // mElementPtrsCnt = allElementPtrs.size();
+  // [[maybe_unused]]
+  // long temp = allElementPtrs.size();
+  // assert(temp == mElementPtrsCnt);
   Dbg::report_info("Pruning Deallocation: ", pruneCounter);
 }
 

@@ -69,8 +69,7 @@ int main(int argc, const char** argv)
         else if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
           assert(keyEvent and "shall be non-empty keyEvent here");
           // Close on X and Escape
-          if ((keyEvent->code == sf::Keyboard::Key::Escape) or
-             (keyEvent->code == sf::Keyboard::Key::X)) {
+          if (keyEvent->code == sf::Keyboard::Key::X) {
             window.close();
           } else {
             if ((keyEvent->code == sf::Keyboard::Key::R) or 

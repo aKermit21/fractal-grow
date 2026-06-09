@@ -19,28 +19,43 @@ struct StopFlash : TranAlg {
 
   StopFlash(int speed=8) 
     : TranAlg{ speed }
-    , mStopActive { false }
+    , mPauseActive { false }
+    , mTimeStarted { false }
     , mCoreElementDisplayRequested { false }
+    , mCumulatedTime {}
   {
     Dbg::report_info("Init: StopFlash  (speed=)", speed);
   }
   
-  // Stop or Freeze animation - intermittently
-  void stopFreezeAnimation();
+  // Stop (Pause) animation - intermittently
+  void stopAnimation();
   
   // animation related keys handling
   bool key_decodation(sf::Keyboard::Key key);
   
-  bool isAnimationActive() const;
+  bool isPauseActive() const;
 
   bool isCoreElemDisplay() const;
 
-  // End of Pause/Stop
+  // Resume after Pause
   void resumeTimeFlow();
+
+  // Time of Game start
+  void startTimeCounting();
+  // Restart of Game
+  void restartTimeCounting();
+
+  std::chrono::duration<double> getTimeOfTheGame();
 
 private:
     
-  bool mStopActive;
+  bool mPauseActive;
+  bool mTimeStarted;
   
   bool mCoreElementDisplayRequested;
+
+  // Start time or fisnishing of a last pause time
+  std::chrono::steady_clock::time_point mLastStartedTime; // point in time
+  // Cumulated time up to latest Pause
+  std::chrono::duration<double> mCumulatedTime;          // in seconds
 };

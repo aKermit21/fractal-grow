@@ -7,13 +7,13 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "stop_flash.h"
+#include "pause_core.h"
 #include "demo_func.h"
 #include <SFML/Window/Event.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
 //
-// Stop animation, Freeze light, Core Elements display
+// Pause animation, Core Elements display
 
 
 bool StopFlash::key_decodation(sf::Keyboard::Key key) {
@@ -35,19 +35,54 @@ bool StopFlash::key_decodation(sf::Keyboard::Key key) {
   }
 }
 
+bool StopFlash::isPauseActive() const {
+  return mPauseActive;
+}
+
 
 bool StopFlash::isCoreElemDisplay() const {
   return mCoreElementDisplayRequested;
 }
 
-
 // Stop (pause) animation
-void StopFlash::stopFreezeAnimation() {
-  mStopActive = true;
+void StopFlash::stopAnimation() {
+  if (!mPauseActive) {
+    mPauseActive = true;
+    mCumulatedTime += std::chrono::steady_clock::now() - mLastStartedTime;
+  }
 }
 
-
+// After Pause
 void StopFlash::resumeTimeFlow() {
-  mStopActive = false;
+  if (mPauseActive) {
+    mPauseActive = false;
+    mLastStartedTime = std::chrono::steady_clock::now();
+  }
 }
 
+// Time of Game start
+void StopFlash::startTimeCounting() {
+  if (!mTimeStarted) {
+    mTimeStarted = true;
+    mLastStartedTime = std::chrono::steady_clock::now();
+    mCumulatedTime = std::chrono::duration<double>(0.0);
+  }
+}
+
+void StopFlash::restartTimeCounting() {
+    mTimeStarted = true;
+    mLastStartedTime = std::chrono::steady_clock::now();
+    mCumulatedTime = std::chrono::duration<double>(0.0);
+}
+
+std::chrono::duration<double> StopFlash::getTimeOfTheGame() {
+  if (!mTimeStarted) {
+    return {};
+  }
+
+  if (mPauseActive) {
+    return mCumulatedTime;
+  } else {
+    return (std::chrono::steady_clock::now() - mLastStartedTime + mCumulatedTime);
+  }
+}
