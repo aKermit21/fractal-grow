@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Robert Gajewski
+// Copyright (c) 2026 Robert Gajewski (pcc21.com)
 // (MIT License)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -282,7 +282,7 @@ sf::VertexArray LightS::create_rays_grid(sf::Vector2f lpos) {
            "Too much grid lines. Possible Infinite loop");
     
   // till top of window with extra margin
-  } while (line_pos.y > -Y_MID); 
+  } while (line_pos.y > - (Y_MID*2)); 
   
   // Restart Lines/rays position
   line_pos = lpos;
@@ -303,7 +303,7 @@ sf::VertexArray LightS::create_rays_grid(sf::Vector2f lpos) {
            "Too much grid lines. Possible Infinite loop");
     
   // till bottom of window with extra margin
-  } while (line_pos.y < Y_MID *3);
+  } while (line_pos.y < Y_MID *4);
 
   return auxg;
 }
