@@ -35,6 +35,8 @@
 void MainProgAggr::postInitSync() {
   // Synchronize flash color pallete with (just initialized) current light color
   colorPal.calc_flash_color_pallet(LightS::s_lightColor);
+  // Init global MutGgrow semi-constant
+  MutGrow::postInit(screen);
 }
 
 // One step per display loop - to be disapthed to subordinate classes/struct
@@ -93,7 +95,7 @@ void MainProgAggr::resetConfig(bool keyAction) {
   
 // (Re)Draw some possible artefacts on top of fractal structure
 void MainProgAggr::drawTopArtefacts(sf::RenderWindow & win,
-                    const AutoScale & rescale, const Element & prim_element) {
+                  const AutoScale & rescale, const Element & prim_element) {
 
   // Draw rescaling and optionally Lights structure
   float scale = rescale.getShrinkCumulativeFactor();
@@ -159,7 +161,7 @@ void MainProgAggr::drawBottomArtefacts(sf::RenderWindow & win) {
   
   // Put End of Game picture
   if (m_EndOfGame) {
-    picPres.endOfGamePic(win);
+    picPres.endOfGamePic(win, screen);
   }
 
   float size = logtxt.textDraw.getSizeCm();

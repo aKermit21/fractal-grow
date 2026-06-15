@@ -16,11 +16,6 @@
 // Transformation Algorithm Configuration data
 // used to tranform parent to child
 // and setup primary element and
-namespace cTran {
-  // Window size centre in accuracy units
-  inline constexpr float cXcenterM = cFrac::WindowXsize / 2.0;
-  inline constexpr float cYcenterM = cFrac::WindowYsize / 2.0;
-}
 
 struct TranAlg {
 

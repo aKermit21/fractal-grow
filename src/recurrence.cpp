@@ -12,6 +12,7 @@
 #include "basics.h"
 #include "dbg_report.h"
 #include "garbage_coll.h"
+#include "screen_size.h"
 #include "transform.h"
 #include "fluctuate.h"
 #include <SFML/Graphics/PrimitiveType.hpp>
@@ -86,7 +87,7 @@ bool new_elements_creation(Element * const parent_ptr, const long level)
 
 bool recurance_elements_redraw(Element * const parent_ptr, const long level, 
            sf::RenderWindow &win, const MovFluctuate &algo_anim,
-           AutoScale & autoscale)
+           AutoScale & autoscale, const ScreenM & sizing)
 {
   static long recur_funct_cnt { 0L };
 
@@ -137,7 +138,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   }
   
   // Tranform this vector (base on settings copied from parent) to the new one 
-  parent_ptr->transform_vec_stem(algo_anim, excGrowScale);
+  parent_ptr->transform_vec_stem(algo_anim, sizing, excGrowScale);
 
   // Find place for Grow Mutation if initial growing has finished
   if (!algo_anim.fluctuateState.growingActive) {
@@ -190,7 +191,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
     // Traverse next level
     // Propagate (copy) parent position/vector to child (vec_xy is overriten!)
     it->stem_xy.vec_xy = parent_ptr->stem_xy.vec_xy; 
-    recurance_elements_redraw(it, level+1, win, algo_anim, autoscale);
+    recurance_elements_redraw(it, level+1, win, algo_anim, autoscale, sizing);
   }
   
   // Follow UP branch
@@ -198,7 +199,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
     // Traverse next level
     // Propagate (copy) parent position/vector to child (vec_xy is overriten!)
     it->stem_xy.vec_xy = parent_ptr->stem_xy.vec_xy; 
-    recurance_elements_redraw(it, level+1, win, algo_anim, autoscale);
+    recurance_elements_redraw(it, level+1, win, algo_anim, autoscale, sizing);
   }
   
   return true; // recurance continue

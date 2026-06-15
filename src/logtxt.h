@@ -12,6 +12,7 @@
 #include "colors.h"
 #include "basics.h"
 #include "opt_lyra.h"
+#include "screen_size.h"
 #include "text_draw.h"
 #include "cfg_toml.h"
 #include <string>
@@ -21,8 +22,9 @@
 // Logfile and Text Printing
 // including help printing with F1
 struct LogText {
-  explicit LogText(OptParams opts) 
-    : file_opened { false } 
+  explicit LogText(OptParams opts, const ScreenM & screen) 
+    : textDraw(screen)
+    , file_opened { false } 
     , cHelpDrawFrames {110}
     , cPrintSpeedFrames {60}
     , snapshot_file_str { opts.optSnapshot }    
@@ -31,6 +33,7 @@ struct LogText {
     , speed_scale_draw_cnt { 0 }
     , m_snapshot_info_active { false }
     , m_developer_draw_active { false }
+    , mSizing { screen }
     , m_scale { 1.0f }
     , log_subdir_state { sDNotChecked }
   {
@@ -64,10 +67,10 @@ struct LogText {
 
   // Conditional draws
   void help_draw(sf::RenderWindow & win); 
-  void pauseDraw(sf::RenderWindow & win); 
+  void pauseDraw(sf::RenderWindow & win) const; 
   void speed_draw(sf::RenderWindow & win, int speed);
   void snapshot_draw(sf::RenderWindow & win); 
-  void developer_draw(sf::RenderWindow & win, TextDraw::DevData & data); 
+  void developer_draw(sf::RenderWindow & win, TextDraw::DevData & data) const ; 
   
   // Dispatch draw
   void welcome_draw(sf::RenderWindow & win, int speed) const; 
@@ -93,6 +96,7 @@ private:
   int speed_scale_draw_cnt;
   bool m_snapshot_info_active;
   bool m_developer_draw_active;
+  const ScreenM & mSizing;
   
   // Original values use in rescaling
   float m_scale;

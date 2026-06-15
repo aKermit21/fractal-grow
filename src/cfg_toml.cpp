@@ -13,9 +13,9 @@
 #include "colors.h"
 #include "dbg_report.h"
 #include "basics.h"
+#include "screen_size.h"
 #include "toml++/impl/parse_error.hpp"
 #include "toml++/impl/parser.hpp"
-#include "transform.h"
 #include <cassert>
 #include <cstddef>
 #include <iostream>
@@ -27,9 +27,10 @@
 
 // Inteface - common error handling, return string to display info
 std::string CfgToml::loadNextConfig(std::string filePath, Element & prim_element,
-                             T_Algo_Arr & transform_algo, T_Col_Palet & colors) {
+          T_Algo_Arr & transform_algo, T_Col_Palet & colors, const ScreenM & screen) {
   std::string info {};
-  auto success = loadNextConfigInternal(filePath, info, prim_element, transform_algo, colors);
+  auto success = loadNextConfigInternal(filePath, info, prim_element,
+                                        transform_algo, colors, screen);
   if (!success) {
     if (m_fileconfigState != cFileDoesNotExist) {
       Dbg::report_warning("Error parsing config file " + filePath +
@@ -44,8 +45,8 @@ std::string CfgToml::loadNextConfig(std::string filePath, Element & prim_element
 
 // next config from loaded file
 bool CfgToml::loadNextConfigInternal(std::string filePath, std::string & info,
-                                     Element & prim_element,  T_Algo_Arr & tranform_algo,
-                                     T_Col_Palet & colors) {
+                              Element & prim_element,  T_Algo_Arr & tranform_algo,
+                               T_Col_Palet & colors, const ScreenM & screen) {
 
  
   if (m_fileconfigState != cFileConfigLoaded) {
@@ -299,15 +300,14 @@ bool CfgToml::loadNextConfigInternal(std::string filePath, std::string & info,
   tmp_prim.stem_xy.vec_xy.dy = *tmpint;
   tmp_prim.stem_xy.vec_xy.originalDy = tmp_prim.stem_xy.vec_xy.dy;
   
-  // if (!thisConfig["primary"]["width"].is_number()) return false;
-  // auto tmpwidth = thisConfig["primary"]["width"].value<float>();
-  // if (!tmpwidth) return false;
-  // // Calculate coordinates of stem taking given width
-  // tmp_prim.stem_xy.width = *tmpwidth;
-  tmp_prim.stem_xy.recalculateStemWidthCoordinates(1.0); // No adjustment
-  
   // Copy this to live Element
   prim_element.stem_xy = tmp_prim.stem_xy;
+  if (screen.isFullScreen()) {
+    prim_element.stem_xy.vec_xy = screen.recalculatePrimProportion(
+                                          tmp_prim.stem_xy.vec_xy);
+  }
+  // Recalculate also x1,x2,y1,y2 accordingly
+  prim_element.stem_xy.recalculateStemWidthCoordinates(1.0, screen); // No adjustment
 
   // Prepare info text
   bool description_success = false;

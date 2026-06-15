@@ -13,6 +13,7 @@
 #include "config.h"
 #include "progress.h"
 #include "mut_grow.h"
+#include "screen_size.h"
 #include <SFML/System/Vector2.hpp>
 #include <cstddef>
 #include <cstdlib>
@@ -148,7 +149,12 @@ void TextDraw::pauseDraw(sf::RenderWindow & win) const {
     text.setFillColor(sf::Color::White);
     text.setLineAlignment(sf::Text::LineAlignment::Right);
     // Put text to top right corner
-    sf::Vector2f myPostion(cFrac::WindowXsize - cFontSize *3, cFontSize);
+    float xPos = mSizing.getWindowXsize();
+    if (mSizing.isFullScreen()) {
+      xPos = mSizing.getDesktopXsize();
+    }
+    xPos -= cFontSize *3;
+    sf::Vector2f myPostion(xPos, cFontSize);
     text.setPosition(myPostion);
     // Draw it
     win.draw(text);
@@ -186,7 +192,12 @@ void TextDraw::rescale_draw(sf::RenderWindow & win, float scale, bool active) {
     text.setStyle(sf::Text::Regular);
     text.setFillColor(sf::Color::Yellow);
     // Put text at the bottom of window
-    sf::Vector2f myPostion(10, cFrac::WindowYsize - cFontSize *2);
+    float yPos = mSizing.getWindowYsize();
+    if (mSizing.isFullScreen()) {
+      yPos = mSizing.getDesktopYsize();
+    }
+    yPos -= cFontSize *2;
+    sf::Vector2f myPostion(10, yPos);
     text.setPosition(myPostion);
     // Draw it
     win.draw(text);
@@ -227,14 +238,19 @@ void TextDraw::developer_draw(sf::RenderWindow & win, const DevData & data) cons
     text.setStyle(sf::Text::Regular);
     text.setFillColor(sf::Color::Yellow);
     // Put text at the right top of window
-    sf::Vector2f myPostion(cFrac::WindowXsize - cFontSize *11.0f, cFontSize/2.f);
+    float xPos = mSizing.getWindowXsize();
+    if (mSizing.isFullScreen()) {
+      xPos = mSizing.getDesktopXsize();
+    }
+    xPos -= cFontSize *11.f;
+    sf::Vector2f myPostion(xPos, cFontSize/2.f);
     text.setPosition(myPostion);
     // Draw it
     win.draw(text);
   }
 }
 
-void TextDraw::endOfGame_draw(sf::RenderWindow & win, DevData & data,
+void TextDraw::endOfGame_draw(sf::RenderWindow & win, const DevData & data,
                               bool demo) const {
   // Enables 1'000'123 format
   struct apostrophe_separator : std::numpunct<char> {
@@ -262,13 +278,18 @@ void TextDraw::endOfGame_draw(sf::RenderWindow & win, DevData & data,
     text.setStyle(sf::Text::Regular);
     text.setFillColor(sf::Color::Yellow);
     text.setLineAlignment(sf::Text::LineAlignment::Center);
-    sf::Vector2f myPostion(cFrac::WindowXsize / 2.0f, 50.0f);
+    float xPos = mSizing.getWindowXsize();
+    if (mSizing.isFullScreen()) {
+      xPos = mSizing.getDesktopXsize();
+    }
+    xPos /= 2.f;
+    sf::Vector2f myPostion(xPos, 50.0f);
     text.setPosition(myPostion);
     win.draw(text);
 
     text.setCharacterSize(25);
     text.setString(text_ss2.str());
-    sf::Vector2f myPostion2(cFrac::WindowXsize / 2.0f, 100.0f);
+    sf::Vector2f myPostion2(xPos, 100.0f);
     text.setPosition(myPostion2);
     win.draw(text);
   }
@@ -283,17 +304,28 @@ void TextDraw::endOfGame_draw(sf::RenderWindow & win, DevData & data,
 }
 
 
-void TextDraw::pictureInfo_draw(sf::RenderWindow & win,
-                                const std::string & info) const {
+void TextDraw::pictureInfo_draw(sf::RenderWindow & win, const std::string & info) const {
   constexpr static int cFontSize { 20 };
 
-  sf::Text text(m_font, info, cFontSize);
-  text.setStyle(sf::Text::Regular);
-  text.setFillColor({100,100,100,255}); // Gray
-  sf::Vector2f myPostion((2.f*cFrac::WindowXsize / 3.0f),
-                         cFrac::WindowYsize - cFontSize *2);
-  text.setPosition(myPostion);
-  win.draw(text);
+  if (m_font_loaded) {
+    sf::Text text(m_font, info, cFontSize);
+    text.setStyle(sf::Text::Regular);
+    text.setFillColor({140,140,140,255}); // Gray
+    // Locate at bottom-right
+    float xPos = mSizing.getWindowXsize();
+    if (mSizing.isFullScreen()) {
+      xPos = mSizing.getDesktopXsize();
+    }
+    xPos *= 2.f/3.f;
+    float yPos = mSizing.getWindowYsize();
+    if (mSizing.isFullScreen()) {
+      yPos = mSizing.getDesktopYsize();
+    }
+    yPos -= cFontSize *2;
+    sf::Vector2f myPostion(xPos, yPos);
+    text.setPosition(myPostion);
+    win.draw(text);
+  }
 } 
 
   

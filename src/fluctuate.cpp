@@ -39,11 +39,6 @@ bool MovFluctuate::key_decodation(sf::Keyboard::Key key) {
     // Reset/Restore Live transformation algo from more primitive one
     algo_data_fluctuate = conv_to_fluctuate(algo_data);
     return true;
-  // case sf::Keyboard::Key::P:
-  //   // TODO: Possible more keys needed
-  //   // Refresh final transformation algo with optional growing animation
-  //   refreshWithRestartGrowing();
-  //   return true;
   default:
     // Not my key
     return false;

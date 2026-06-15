@@ -21,6 +21,7 @@ struct OptParams {
   bool optGrowingOff {false};
   int optSpeed {8}; // default speed
   bool optPictureOff {false};
+  bool optFullScreen {false};
   std::string optSnapshot {cPath::cDefaultSnapshot}; 
   
   int parseResult {};

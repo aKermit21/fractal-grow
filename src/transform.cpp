@@ -12,6 +12,7 @@
 #include "fluctuate.h"
 #include "basics.h"
 #include "aux_func.h"
+#include "screen_size.h"
 #include <SFML/Window/Keyboard.hpp>
 #include <cstdlib>
 #include <optional>
@@ -22,20 +23,20 @@ float TranAlg::s_SmallVect;
 float TranAlg::s_SmallVectDefault;
 
 
-void Element::initPrimary() {
+void Element::initPrimary(const ScreenM & screen) {
   // Use multiplied values for better accuracy tranformation
-  stem_xy.vec_xy.x = cFrac::PrimStartX; 
-  stem_xy.vec_xy.y = cFrac::PrimStartY; 
-  stem_xy.vec_xy.dx = cFrac::PrimVecX; 
-  stem_xy.vec_xy.dy = cFrac::PrimVecY; 
+  stem_xy.vec_xy.x = screen.getPrim().x; 
+  stem_xy.vec_xy.y = screen.getPrim().y; 
+  stem_xy.vec_xy.dx = screen.getPrim().dx; 
+  stem_xy.vec_xy.dy = screen.getPrim().dy; 
   // Make a copy of dx and dy
-  stem_xy.vec_xy.originalDx = cFrac::PrimVecX; 
-  stem_xy.vec_xy.originalDy = cFrac::PrimVecY; 
+  stem_xy.vec_xy.originalDx = stem_xy.vec_xy.dx;
+  stem_xy.vec_xy.originalDy = stem_xy.vec_xy.dy; 
   // stem width
   stem_xy.x1 = stem_xy.vec_xy.x;
   stem_xy.x2 = stem_xy.vec_xy.x;
-  stem_xy.y1 = stem_xy.vec_xy.y - cFrac::PrimStemWidth; 
-  stem_xy.y2 = stem_xy.vec_xy.y + cFrac::PrimStemWidth; 
+  stem_xy.y1 = stem_xy.vec_xy.y - screen.getPrimStemWidth(); 
+  stem_xy.y2 = stem_xy.vec_xy.y + screen.getPrimStemWidth(); 
   // prevent initial angle change
   stem_xy.prev_l_angle = lAngleUnknown;
   // Primary stem is a Core Element
@@ -51,6 +52,7 @@ void Element::initPrimary() {
 // Tranform parent vector (also stem data) to the child one 
 // considering index and branch type
 void Element::transform_vec_stem(const MovFluctuate & fluctuate,
+                                 const ScreenM & screen,
                                  const std::optional<float> overrideScale) { 
   
   const T_Fluctuate_Algo_Arr & algo_fluct = fluctuate.algo_data_fluctuate;
@@ -106,7 +108,7 @@ void Element::transform_vec_stem(const MovFluctuate & fluctuate,
       }
     }
 
-    stem_xy.reposition_stem(fraction, scale);
+    stem_xy.reposition_stem(fraction, scale, screen);
 
     // rotate and re-scale
     stem_xy.vec_xy.rotateAndRescale(angle, scale);

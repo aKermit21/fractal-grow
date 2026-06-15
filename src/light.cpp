@@ -8,6 +8,7 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "light.h"
+#include "aux_func.h"
 #include "basics.h"
 #include "demo_func.h"
 #include "cstdlib"
@@ -119,6 +120,10 @@ void LightS::light_draw(sf::RenderWindow &win, bool tempDeactive){
   
   // Take position of light from vector (light has opposite y than vector y)
   float x_pos = (X_MID*2) - (CIRCLE_R *2) - (MAIN_SPOT_R *2);
+  if (mSizing.isFullScreen()) {
+    // Center light elements drawing for Full Screen Mode
+    x_pos += mSizing.getRightShiftToCenter();
+  }
   float y_pos = static_cast<float>(Y_MID - s_lightVec.y - MAIN_SPOT_R);
   sf::Vector2f position{x_pos, y_pos};
 
@@ -332,24 +337,37 @@ sf::VertexArray LightS::init_rainbow(){
   
   // Central point - right side
   auxl[0].position = sf::Vector2f((X_MID*2) - CIRCLE_R - 5.f, y_pos);
+  if (mSizing.isFullScreen()) {
+    // Center position for FullScreen
+    auxl[0].position.x += mSizing.getRightShiftToCenter();
+  }
   auxl[0].color = sf::Color::Black;
 
   // Fan of all colors
   angle = 0;
   for (size_t i{1}; i<cCOLORS_NR; ++i) {
     // Converting degress to radians
-    angle_rad = angle * 3.14159 / 180;
+    angle_rad = myAux::degreesToRadians(angle);
     auxl[i].position = sf::Vector2f((X_MID*2) - CIRCLE_R - 5.f - (cos(angle_rad)* CIRCLE_R),
       y_pos + sin(angle_rad)*CIRCLE_R);
+    if (mSizing.isFullScreen()) {
+      // Center position for FullScreen
+      auxl[i].position.x += mSizing.getRightShiftToCenter();
+    }
+      
     auxl[i].color = LColors_Init[i];
     // angle for next step
     angle += 60;
     }
 
   // Last element with repeated first color to obtain continuum
-  angle_rad = angle * 3.14159 / 180;
+  angle_rad = myAux::degreesToRadians(angle);
   auxl[cCOLORS_NR].position = sf::Vector2f((X_MID*2) - CIRCLE_R - 5.f
      - (cos(angle_rad)* CIRCLE_R), y_pos + sin(angle_rad)*CIRCLE_R); 
+  if (mSizing.isFullScreen()) {
+    // Center position for FullScreen
+    auxl[cCOLORS_NR].position.x += mSizing.getRightShiftToCenter();
+  }
   auxl[cCOLORS_NR].color = LColors_Init[1];
   
   return auxl;

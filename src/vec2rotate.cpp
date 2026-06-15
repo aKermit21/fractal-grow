@@ -8,7 +8,7 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "basics.h"
-#include "transform.h"
+#include "screen_size.h"
 #include <cmath>
 #include <assert.h>
 
@@ -29,7 +29,8 @@ void Vec2D::reposition(const float fraction) {
 
 
 // move along x,y and x+dx,y+dy line - shall be done before rotation
-void Stem::reposition_stem(const float fraction, float scale) {
+void Stem::reposition_stem(const float fraction, const float scale,
+                           const ScreenM & screen) {
   float thickness = 0.0;
 
   // Calculate thickness of stem from range 0.008 - 0 based on vector size
@@ -40,16 +41,16 @@ void Stem::reposition_stem(const float fraction, float scale) {
   // Consider scaling just to be applied (by rotateAndRescale() in transform.cpp)
   approx_vec *= scale;
 
-  if (approx_vec > static_cast<float>(cFrac::WindowYsize)/2.0f) {
+  if (approx_vec > static_cast<float>(screen.getWindowYsize())/2.0f) {
     thickness = 0.008f; // this initially corresponds to level 1
-  } else if (approx_vec < static_cast<float>(cFrac::WindowYsize)/10.0f) {
+  } else if (approx_vec < static_cast<float>(screen.getWindowYsize())/10.0f) {
     // No thickness for too small elements (applies tomost elements)
     thickness = 0.0f; 
   } else {
     // sqrt for better tuned dependency curve
     // Warning: This is potencially Slowing down
     thickness = 0.008f *
-        std::sqrt(approx_vec / (static_cast<float>(cFrac::WindowYsize)/2.0f));
+        std::sqrt(approx_vec / (static_cast<float>(screen.getWindowYsize())/2.0f));
   }
    
   // Consider special rule for scale > 1
@@ -69,14 +70,15 @@ void Stem::reposition_stem(const float fraction, float scale) {
 
 
 // Calculate coordinates of stem taking given width
-void Stem::recalculateStemWidthCoordinates(float cumulativeFactor) {
+void Stem::recalculateStemWidthCoordinates(float cumulativeFactor,
+                                       const ScreenM & screen) {
   // Use multiplied values for better accuracy tranformation
   float stem_x, stem_y, length;
   // create perpendicular vector of given width
   stem_x = -vec_xy.dy;
   stem_y = vec_xy.dx;
   length = std::sqrt(stem_x*stem_x + stem_y*stem_y);
-  auto adjustedStemWidth = cumulativeFactor * cFrac::PrimStemWidth;
+  auto adjustedStemWidth = cumulativeFactor * screen.getPrimStemWidth();
   y1 =  (vec_xy.y - stem_y * (adjustedStemWidth/length) );
   y2 =  (vec_xy.y + stem_y * (adjustedStemWidth/length) );
   x1 =  (vec_xy.x - stem_x * (adjustedStemWidth/length) );
@@ -87,7 +89,7 @@ void Stem::recalculateStemWidthCoordinates(float cumulativeFactor) {
 // Shrink stem according to given (usable) window Center
 // used for auto-scaling
 void Stem::shrinkStemCenter(float factor, float cumulativeFactor, 
-                            int xCenter, int yCenter) {
+                            int xCenter, int yCenter, const ScreenM & screen) {
 
   assert(factor <= 1 and factor > 0 and "factor for shrinking expected to be 0..1");
   assert(xCenter > 0 and yCenter > 0 and "expected plus coordinates");
@@ -108,7 +110,7 @@ void Stem::shrinkStemCenter(float factor, float cumulativeFactor,
   vec_xy.originalDy = vec_xy.dy;
 
   // Calculate coordinates of stem taking given width
-  recalculateStemWidthCoordinates(cumulativeFactor);
+  recalculateStemWidthCoordinates(cumulativeFactor, screen);
 }
 
 // move by given (absolute) dx dy

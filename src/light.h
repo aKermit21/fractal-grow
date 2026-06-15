@@ -10,7 +10,7 @@
 #pragma once
 
 #include "dbg_report.h"
-#include "basics.h"
+#include "screen_size.h"
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
@@ -20,10 +20,13 @@
 
 struct LightS {
 
-  LightS() 
-  : m_lightMoving { noMove }
-  , rays_mode { raysMoving }
-  , m_demoMode { false }
+  explicit LightS(ScreenM & screen) 
+    : X_MID {screen.getWindowXsize() / 2 }
+    , Y_MID { screen.getWindowYsize() / 2 }
+    , mSizing { screen }
+    , m_lightMoving { noMove }
+    , rays_mode { raysMoving }
+    , m_demoMode { false }
   {
     Dbg::report_info("Init: Lights  ", Y_MID);
     // Init light structures
@@ -83,10 +86,12 @@ private:
   // Current lights Moving mode
   enum LightMove {noMove, upMove, downMove};
   
-  // calculate middle of window
-  constexpr static int X_MID { cFrac::WindowXsize / 2 }; 
-  constexpr static int Y_MID { cFrac::WindowYsize / 2 };
+  // Middle of window
+  const int X_MID;
+  const int Y_MID;
 
+  const ScreenM & mSizing;
+  
   // Main light radius
   constexpr static int MAIN_SPOT_R { 25 };
 

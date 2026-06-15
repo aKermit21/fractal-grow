@@ -9,9 +9,9 @@
 
 #pragma once
 
-#include "colors.h"
 #include "basics.h"
 #include "match_col.h"
+#include "screen_size.h"
 #include <cassert>
 
 
@@ -51,16 +51,16 @@ struct MutGrow {
   static_assert((cFrac::NrOfOrders > cMaxDrawLevels) and
     "Wrong Parameters dependecy: NrOfOrders >> cMaxDrawLevels" );
   
-  // Middle of the vertical window
-  constexpr static int cYmid { cFrac::WindowYsize / 2 }; 
   constexpr static int cGrowingSteps { 100 }; // assumed transitions steps
 
   enum MutGrowingState { growingStarting, growingOngoing, growingOngoingPause,
                         growingFinished };
   
-  // enum ColorExciteState { colorNotCaught, colorBeginCaught, colorEndCaught };
-
   // common for all instances
+
+  // Initialization which cannot be done with class/instance init
+  static void postInit(ScreenM & screen);
+  
   static bool possibleInitGrowMutation(Element * const ptr, const short level);
   // void handleSecGrow(SecGrow * const ptr);
   static void handleGrowMutationStep(void);
@@ -107,6 +107,9 @@ struct MutGrow {
 
 private:
 
+  // Middle of the vertical window
+  static int cYmid;
+  
   void calcDominatingColors(void);
   
   // return true if excited this cycle

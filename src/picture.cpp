@@ -8,6 +8,8 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "picture.h"
+#include "basics.h"
+#include "screen_size.h"
 #include "text_draw.h"
 #include "config.h"
 #include <SFML/Graphics/Texture.hpp>
@@ -21,9 +23,16 @@
 // Load Pictures and scale it
 
 
-void PicPres::endOfGamePic(sf::RenderWindow & win) {
+void PicPres::endOfGamePic(sf::RenderWindow & win, ScreenM & sizing) {
   std::string str {GalaxyImageVIEW};
-  anyPicScaled(win, str, 1.0f);
+  float scale = 1.f;
+  // Modify scale to cover full screen with picture in Full Screen Mode
+  if (sizing.isFullScreen()) {
+    scale = static_cast<float>(sizing.getDesktopXsize()) / cFrac::WindowXsizeFixed;
+    // scale > 1 -> enlarge
+    if (scale < 1.f) scale = 1.f;
+  }
+  anyPicScaled(win, str, scale);
 }
 
 
@@ -38,7 +47,7 @@ void PicPres::anyPicScaled(sf::RenderWindow & win,
 
   sf::Sprite sprite(*texturePtr);
   // semi-transparent
-  sprite.setColor(sf::Color(255, 255, 255, 120));
+  sprite.setColor(sf::Color(255, 255, 255, 110));
   if (scale != 1.0f) {
     sprite.setScale({scale, scale}); // absolute scale factor
   }

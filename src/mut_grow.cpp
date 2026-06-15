@@ -8,10 +8,12 @@
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include "mut_grow.h"
+#include "basics.h"
 #include "dbg_report.h"
 #include "match_col.h"
 #include "transform.h"
 #include "light.h"
+#include "colors.h"
 #include <SFML/Graphics/Color.hpp>
 #include <cassert>
 
@@ -22,8 +24,13 @@ bool MutGrow::mMutEnabled {true}; // Enable Mutational Grow
 int MutGrow::mGlobalExcited {0};
 int MutGrow::growingCntr = 0;
 long MutGrow::growPtrsCnt; 
+int MutGrow::cYmid {cFrac::WindowYsizeFixed /2}; // shall be overwritten by postInit
 std::vector<std::unique_ptr<MutGrow>> MutGrow::allMutGrowPtrs {};
 
+
+void MutGrow::postInit(ScreenM & screen) {
+  cYmid = screen.getWindowYsize() / 2; 
+}
 
 bool MutGrow::possibleInitGrowMutation(Element * const ptrElement,
                                         const short level) {

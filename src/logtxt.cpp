@@ -12,14 +12,13 @@
 #include "config.h"
 #include "dbg_report.h"
 #include "basics.h"
+#include "screen_size.h"
 #include "text_draw.h"
-#include "transform.h"
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <filesystem>
 #include <fstream>
 #include <stdlib.h>
-#include <string_view>
 #include <time.h>
 
 
@@ -73,12 +72,13 @@ void LogText::snapshot_draw(sf::RenderWindow & win) {
   }
 }
 
-void LogText::pauseDraw(sf::RenderWindow & win) {
+void LogText::pauseDraw(sf::RenderWindow & win) const {
   textDraw.pauseDraw(win);
 }
 
 // Present Optional info
-void LogText::developer_draw(sf::RenderWindow & win, TextDraw::DevData & devData) {
+void LogText::developer_draw(sf::RenderWindow & win, TextDraw::DevData & devData)
+                  const {
   if (m_developer_draw_active) {
     devData.scale = m_scale;
     devData.size_cm = textDraw.getSizeCm();
@@ -102,7 +102,7 @@ void LogText::welcome_draw(sf::RenderWindow & win, int speed) const {
 
 void LogText::rescale_draw(sf::RenderWindow & win, float scale, bool active) {
   m_scale = scale;
-  textDraw.rescale_draw(win, scale, active);
+  textDraw.rescale_draw(win,  scale, active);
 } 
 
 float LogText::getScale(void) const {
@@ -147,13 +147,13 @@ std::string LogText::search_file_path(void) {
   return filepath_str;
 }
 
-void LogText::load_next_snapshot(Element& prim_element, T_Algo_Arr & transform_algo,
-                                 T_Col_Palet & colors) {
+void LogText::load_next_snapshot(Element& prim_element, T_Algo_Arr & transform_algo, T_Col_Palet & colors) {
   // File shall be immediately closed after any operation
   assert(!file_opened);
 
   loaded_snapshot_info_str =
-    cfgToml.loadNextConfig(search_file_path(), prim_element, transform_algo, colors);
+    cfgToml.loadNextConfig(search_file_path(), prim_element, transform_algo,
+                            colors, mSizing);
 }
 
   

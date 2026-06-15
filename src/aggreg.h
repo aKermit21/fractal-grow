@@ -11,6 +11,7 @@
 
 #include "autoscale.h"
 #include "colors.h"
+#include "screen_size.h"
 #include "dbg_report.h"
 #include "basics.h"
 #include "light.h"
@@ -18,7 +19,6 @@
 #include "opt_lyra.h"
 #include "fluctuate.h"
 #include "picture.h"
-#include <string>
 
 // Main program aggregate (collection of) structs
 // containing MovWind/MovAnim(animation), Color Palette,
@@ -26,8 +26,10 @@
 
 struct MainProgAggr {
   explicit MainProgAggr(OptParams opts)
-      : logtxt{opts}
-      , movFluctuate{opts}
+      : screen {opts.optFullScreen}
+      , logtxt {opts, screen}
+      , movFluctuate {opts}
+      , lightS {screen}
       , m_demoActive{opts.optDemo} 
       , m_optPictureOff{opts.optPictureOff}
       , m_frame_cnt { 0L }
@@ -58,7 +60,8 @@ struct MainProgAggr {
   // Single demo step
   void demoGenerator(void);
 
-  // aggregate of Structs/classes
+  // Aggregate of Structs/classes
+  ScreenM screen;     // Adjusting sizes to possible full screen mode
   LogText logtxt;     // Text, Logging snapshots
   MovFluctuate movFluctuate;   // animation: open, close, wind, growing
   ColorPal colorPal; // color palette

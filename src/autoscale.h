@@ -11,15 +11,8 @@
 
 #include "dbg_report.h"
 #include "basics.h"
-#include "transform.h"
-
-// Min/Max drawing structure defined in Dbg
-// struct VecMinMax {
-//   int min_x;
-//   int min_y;
-//   int max_x;
-//   int max_y;
-// };
+#include "screen_size.h"
+#include <SFML/Window/Keyboard.hpp>
 
 // Perform (optionally) autoscale by changing size and location
 // of first element to fit whole drawing into window
@@ -28,8 +21,14 @@ struct AutoScale
   using VecMinMax = Dbg::VecMinMax;
   struct VecDelta {int dx; int dy;};
 
-  AutoScale(bool onOff = true)
-  : m_minmax{} // actual start values are set by cycleStart
+  explicit AutoScale(const ScreenM & screen, bool onOff = true)
+  : winUsable_x_center {screen.isFullScreen() ?
+                screen.getXcenterM() + screen.getRightShiftToCenter()
+                            - static_cast<int>(cLightMargin /2.0) :
+                screen.getXcenterM() - static_cast<int>(cLightMargin /2.0)}
+  , winUsable_y_center {screen.getYcenterM() + cHistMargin -2}
+  , m_screen {screen}
+  , m_minmax{} // actual start values are set by cycleStart
   , m_optionOn{onOff}
   , m_rescaleActive{false}
   , m_cumulativeFactor{1.0}
@@ -47,12 +46,6 @@ struct AutoScale
   constexpr static int cHistMargin { 50 };
   // NO mevement, centering, needed
   constexpr static VecDelta cDeltaNoMove { 0, 0 };
-
-  // Usable window center used throughout autoscale
-  constexpr static int winUsable_x_center = cTran::cXcenterM - 
-                           (cLightMargin /2.0);
-  // Push figure rather to bottom as it grows up
-  constexpr static int winUsable_y_center = cTran::cYcenterM + cHistMargin -2; 
   
   // Single step move (centering)
   constexpr static float cSmallStep { 3.0 }; // graphic points
@@ -87,6 +80,14 @@ struct AutoScale
   
   private:
 
+  // Usable window center used throughout autoscale
+  const int winUsable_x_center;
+
+  // Push figure rather to bottom as it grows up
+  const int winUsable_y_center;
+
+  const ScreenM & m_screen;
+  
   // finding edges (min/max) of all elements per last frame 
   // (in multiplied vector size)
   VecMinMax m_minmax;
@@ -99,7 +100,7 @@ struct AutoScale
 
   float m_cumulativeFactor { 1 };
   
-  VecMinMax getRealScale(void);
+  VecMinMax getRealScale(void) const;
   
   VecDelta centerPicture(bool fastMode);
   

@@ -30,16 +30,19 @@ namespace cFrac {
   // (see also NrOfDrawOrders)
   inline constexpr int NrOfOrders { 3000 }; 
 
-  // Graphic visible window  
-  inline constexpr int WindowXsize { 1200 }; 
-  inline constexpr int WindowYsize { 1000 }; 
+  // Hardcoded (fixed) sizes and coordinates below
+  
+  // Graphic visible window - in fixed (hardcoded) size window mode
+  inline constexpr int WindowXsizeFixed { 1200 }; 
+  inline constexpr int WindowYsizeFixed { 1000 }; 
   
   // Primary element size, position - assuming window 1200x1000
-  inline constexpr float PrimStartX { 30.0 };
-  inline constexpr float PrimStartY { 530.0 };
-  inline constexpr float PrimVecX { 1000.0 };
-  inline constexpr float PrimVecY { -80.0 };
-  inline constexpr float PrimStemWidth { 10.0 };
+  inline constexpr float PrimStartXfixed { 30.0 };
+  inline constexpr float PrimStartYfixed { 530.0 };
+  inline constexpr float PrimVecXfixed { 1000.0 };
+  inline constexpr float PrimVecYfixed { -80.0 };
+  inline constexpr float PrimStemWidthFixed { 10.0 };
+
   
   // Assumed initial Size in cm
   inline constexpr float InitialSize { 24 };
@@ -48,7 +51,7 @@ namespace cFrac {
   inline constexpr int DemoInitCnt { 1 };
 
   // Minimal time per frame drawing in ms
-  inline constexpr double MinTimePerFrame { 15.0 }; // 67Hz
+  inline constexpr double MinTimePerFrame { 13.3 }; // 75Hz
 }
 
 enum BranchType { upBranch, downBranch, firstBranch };
@@ -91,24 +94,30 @@ private:
                        const T cos_val); // rotation matrix calculations
 };
 
+// Forward declaration to enable cross-reference
+// between Element and Screen (see screen_size.h)
+struct ScreenM;
+
 // Additional points used for drawing stem with thickness
 // Warning: x#,y# values are recalculated each frame
 struct Stem{
   Vec2D vec_xy; // bare line along centre of stem
-  float x1 {};  // additional pofloats at base of stem
+  float x1 {};  // additional points at base of stem
   float y1 {};  // deciding about their drawn thickness
   float x2 {};
   float y2 {};
   // move along x,y and x+dx,y+dy line - 
   // affects x,y and x1,y1,x2,y2 - shall be done before rotation;
   // used for contructing child element based on parent
-  void reposition_stem(const float fraction, const float scale);
+  void reposition_stem(float fraction, float scale, const ScreenM & screen);
   // move by given (absolute) dx dy
-  void repositionStemAbsolute(const float dx, const float dy);
+  void repositionStemAbsolute(float dx, float dy);
   // Shrink stem according to given (usable) window Center
-  void shrinkStemCenter(float factor, float cumulativeFactor, int xCenter, int yCenter);
+  void shrinkStemCenter(float factor, float cumulativeFactor,
+                        int xCenter, int yCenter, const ScreenM & screen);
   // Calculate coordinates of stem with some possible adjustmement (due to autoscale)
-  void recalculateStemWidthCoordinates(float cumulativeFactor);
+  void recalculateStemWidthCoordinates(float cumulativeFactor,
+                                       const ScreenM & screen);
 
   // // to be used by Flash Light version
   // virtual bool light_vec_angle_flip() = 0;
@@ -163,6 +172,8 @@ using T_Fluctuate_Algo_Arr = std::array<T_Algo_Arr, cFrac::NrOfOrders +1>;
 struct MutGrow;
 // Another Forward declaration (see fluctuate.h)
 struct MovFluctuate;
+// Another Forward declaration (see screen_size.h)
+struct ScreenM;
 // Another Forward declaration - internal
 struct ChildrenElementsCluster ;
   
@@ -185,9 +196,10 @@ struct Element {
   // Tranform vec/stem from parent using special transformation array
   // - method for static (single frame) drawing
   void transform_vec_stem(const MovFluctuate & algo_fluct,
-                          const std::optional<float> overrideScale);
-  virtual void draw_stem(sf::RenderWindow & win, long level, const bool coreElemt);
-  void initPrimary();   // Init data for first element 
+                          const ScreenM & screen,
+                          std::optional<float> overrideScale);
+  virtual void draw_stem(sf::RenderWindow & win, long level, bool coreElemt);
+  void initPrimary(const ScreenM & screen);   // Init data for first element 
 };
 
 // Cluster of Children - either up or down

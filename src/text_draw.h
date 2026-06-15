@@ -13,13 +13,15 @@
 #include <string_view>
 #include "dbg_report.h"
 #include "match_col.h"
+#include "screen_size.h"
 
 // Drawing Texts on top of Picture
 struct TextDraw {
-  TextDraw()
+  TextDraw(const ScreenM & sizing)
     : font_subdir_state { sDNotChecked }
     , m_font_loaded { false }
     , m_size_cm { 0.0 }
+    , mSizing { sizing }
   {
     Dbg::report_info("Init: TextDraw ");
     m_font_loaded = init_font();
@@ -54,7 +56,7 @@ struct TextDraw {
   void speed_draw(sf::RenderWindow & win, int speed) const; 
   void snapshot_draw(sf::RenderWindow & win, std::string & info) const; 
   void rescale_draw(sf::RenderWindow & win, float scale, bool active); 
-  void endOfGame_draw(sf::RenderWindow & win, DevData & data, bool demo) const; 
+  void endOfGame_draw(sf::RenderWindow & win, const DevData & data, bool demo) const; 
   void pictureInfo_draw(sf::RenderWindow & win, const std::string & text) const; 
   float getSizeCm(void) const;
   
@@ -76,6 +78,7 @@ private:
   sf::Font m_font;
 
   float m_size_cm;
+  const ScreenM & mSizing;
   
   bool init_font(void);
 };

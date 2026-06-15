@@ -28,6 +28,8 @@ OptParams optParse(int argc, const char** argv)
             ["-v"]["--version"]("Version")
       | lyra::opt(myArgs.optDemo)
             ["-d"]["--demo"]("Run demo")
+      | lyra::opt(myArgs.optFullScreen)
+            ["-f"]["--full"]("Full Screen mode (hardcoded size by default)")
       | lyra::opt(myArgs.optPictureOff)
             ["-p"]["--nopic"]("Do Not display Progress Pictures (On by default)")
       | lyra::opt(myArgs.optGrowingOff)
@@ -35,7 +37,7 @@ OptParams optParse(int argc, const char** argv)
       | lyra::opt(myArgs.optSpeed, "speed")
             ["-s"]["--speed"]("Initial Speed vs Detail draw [0-20]")
       | lyra::opt(myArgs.optSnapshot, "file")
-            ["-f"]["--file"]("Config File"); 
+            ["-c"]["--config"]("Config File"); 
 
   // Parse the program arguments:
   auto result = cli.parse({ argc, argv });

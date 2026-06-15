@@ -10,14 +10,14 @@
 #include "autoscale.h"
 #include "dbg_report.h"
 #include "basics.h"
-#include "transform.h"
+#include "screen_size.h"
 
 using VecMinMax = Dbg::VecMinMax;
   
 // initialize data on new frame/cycle
 void AutoScale::cycleStart() {
-  m_minmax.minX = cFrac::WindowXsize; // end of window 
-  m_minmax.minY = cFrac::WindowYsize; // end of window 
+  m_minmax.minX = m_screen.getWindowXsize(); // end of window 
+  m_minmax.minY = m_screen.getWindowYsize(); // end of window 
   m_minmax.maxX = 0;
   m_minmax.maxY = 0;
 }
@@ -72,7 +72,7 @@ void AutoScale::performAutoscaleCycle(Element & prim, bool fastMode) {
         }
         m_cumulativeFactor *= shrinkStep;
         prim.stem_xy.shrinkStemCenter(shrinkStep, m_cumulativeFactor,
-                                      winUsable_x_center, winUsable_y_center);
+                                  winUsable_x_center, winUsable_y_center, m_screen);
       }
     }
   }
@@ -86,7 +86,7 @@ AutoScale::VecDelta AutoScale::centerPicture(bool fastMode) {
   static_assert(cAcceptedDiff > cSmallStep, 
     "Accepted diffrence must be > than small change; otherwise algo will not conclude");
 
-  static_assert(winUsable_x_center < cTran::cXcenterM, 
+  assert(winUsable_x_center < m_screen.getWindowXsize() and 
               "Usable horizontal center move to left (X axis)");
 
   // Calculate center position of latest frame picture
@@ -104,8 +104,8 @@ AutoScale::VecDelta AutoScale::centerPicture(bool fastMode) {
   }
 
   // For very big changes move without animation
-  if ((std::abs(delta.dx) > cFrac::WindowXsize/2.f) or
-      (std::abs(delta.dy) > cFrac::WindowYsize/2.f)) {
+  if ((std::abs(delta.dx) > m_screen.getWindowXsize()/2.f) or
+      (std::abs(delta.dy) > m_screen.getWindowYsize()/2.f)) {
     return delta;
   }
       
@@ -143,7 +143,8 @@ bool AutoScale::bigRescaleRequired(const VecMinMax vec) const {
 
   auto xSpan = std::abs(vec.maxX - vec.minX);
   auto ySpan = std::abs(vec.maxY - vec.minY);
-  if ((xSpan > 2.5*cFrac::WindowXsize) or (ySpan > 2.5*cFrac::WindowYsize)) {
+  if ((xSpan > 2.5*m_screen.getWindowXsize()) or
+      (ySpan > 2.5*m_screen.getWindowYsize())) {
     return true; 
   }
   else { 
@@ -157,10 +158,15 @@ bool AutoScale::bigRescaleRequired(const VecMinMax vec) const {
 
 // Check if rescale has to be started 
 bool AutoScale::rescaleRequired(const VecMinMax vec) const {
+  // Possible Right shift to center drawing in full screen mode
+  int shift = 0;
+  if (m_screen.isFullScreen()) {
+    shift = m_screen.getRightShiftToCenter();
+  }
 
   if ((vec.minX < cMargin) or (vec.minY < cMargin) or
-      (vec.maxX > (cFrac::WindowXsize - cLightMargin)) or
-      (vec.maxY > (cFrac::WindowYsize - cMargin))) {
+      (vec.maxX > (m_screen.getWindowXsize() - cLightMargin + shift)) or
+      (vec.maxY > (m_screen.getWindowYsize() - cMargin))) {
     return true; 
   }
   else { 
@@ -170,11 +176,16 @@ bool AutoScale::rescaleRequired(const VecMinMax vec) const {
   
 // Check if rescale has to be stopped 
 bool AutoScale::rescaleFinished(const VecMinMax vec) const {
+  // Possible Right shift to center drawing in full screen mode
+  int shift = 0;
+  if (m_screen.isFullScreen()) {
+    shift = m_screen.getRightShiftToCenter();
+  }
 
   if ((vec.minX >= cMargin + cHistMargin) and (vec.minY >= cMargin + cHistMargin) and
-      (vec.maxX < (cFrac::WindowXsize - (2*cMargin) - cLightMargin)) and
+      (vec.maxX < (m_screen.getWindowXsize() - (2*cMargin) - cLightMargin + shift)) and
       // Push image rather to bottom
-      (vec.maxY < (cFrac::WindowYsize - (5*cMargin) ))) {
+      (vec.maxY < (m_screen.getWindowYsize() - (5*cMargin) ))) {
     return true; 
   }
   else { 

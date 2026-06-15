@@ -9,6 +9,7 @@
 
 #include "basics.h"
 #include "dbg_report.h"
+#include "screen_size.h"
 #include <unordered_map>
 #include <unordered_set>
 #include <string_view>
@@ -46,7 +47,7 @@ struct PicPres {
   enum SubDirState {sDNotChecked, sDExists, sDNotExists};
 
   // Insert End of Game - Galaxy - picture from image subdirectory
-  void endOfGamePic(sf::RenderWindow & win);
+  void endOfGamePic(sf::RenderWindow & win, ScreenM & sizing);
 
   // Present any picture from image subdirectory and scale it
   void anyPicScaled(sf::RenderWindow & win, std::string picFile, float scale);

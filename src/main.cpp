@@ -14,6 +14,7 @@
 #include "opt_lyra.h"
 #include "garbage_coll.h"
 #include "fluctuate.h"
+#include "screen_size.h"
 #include <cassert>
 #include <iostream>
 #include <optional>
@@ -22,7 +23,8 @@
 #include <SFML/Window/Keyboard.hpp>
 
 bool recurance_elements_redraw(Element * const prim_ptr, const long level, 
-                sf::RenderWindow & win, const MovFluctuate & algo_anim, AutoScale & autoScale);
+                sf::RenderWindow & win, const MovFluctuate & algo_anim,
+                AutoScale & autoScale, const ScreenM & screen);
 
 
 int main(int argc, const char** argv)
@@ -40,22 +42,24 @@ int main(int argc, const char** argv)
   
     // Collecting errors, warning, info (trace); also Garbage collector: memory management
     MemAndDebug memDbg;
-    // Auto (re)scalling
-    AutoScale autoScale;
 
     // Top aggregation starts: Drawing, animation, colors, logs, key decode
     MainProgAggr fractMain(options);
+
+    // Auto (re)scalling
+    AutoScale autoScale(fractMain.screen);
+
     fractMain.postInitSync();
 
-    std::string windowName {cFrac::ProgramName};
+    std::string_view windowName {cFrac::ProgramName};
     if (options.optDemo) windowName = cFrac::DemoProgramName;
 
-    sf::RenderWindow window(sf::VideoMode({cFrac::WindowXsize, cFrac::WindowYsize}), 
-                            windowName);
+    sf::RenderWindow window = fractMain.screen.initWindow(windowName,
+                                                options.optFullScreen);
 
     // First fractal element (order 0)
     Element prim_element;
-    prim_element.initPrimary();
+    prim_element.initPrimary(fractMain.screen);
 
     while (window.isOpen()) {
 
@@ -75,7 +79,7 @@ int main(int argc, const char** argv)
             if ((keyEvent->code == sf::Keyboard::Key::R) or 
                 (keyEvent->code == sf::Keyboard::Key::F3)) {
               // Reset
-              prim_element.initPrimary();
+              prim_element.initPrimary(fractMain.screen);
               autoScale.resetAutoScale();
             } // intentionaly lack of else, reset handling continued below
             // Further Key decodation dispatcher
@@ -97,7 +101,7 @@ int main(int argc, const char** argv)
 
       // Reconfigurate elements according to current algo and Draw in recurrence
       (void)recurance_elements_redraw(&prim_element, 0, window, 
-                                      fractMain.movFluctuate, autoScale); // 0 - start level
+                fractMain.movFluctuate, autoScale, fractMain.screen); // 0 - start level
 
       autoScale.performAutoscaleCycle(prim_element, MutGrow::isGlobalExcited());
 
@@ -112,7 +116,7 @@ int main(int argc, const char** argv)
         fractMain.oneStepCfgChange();
         // also possible demo generation step
         fractMain.demoGenerator();
-        // Remove not used memory
+        // Remove not used allocated Clusters every # cycle/frame
         memDbg.pruneElementsClusterVector(200);
       }
     }

@@ -8,3 +8,4 @@ Version  Date           Description
                         also fractal.h -> basics.h
 0.3      09.06.2026     Title change to: Cosmic Fractal
                         Pause Timing corrected
+0.4      15.06.2026     Full Screen Mode added (-f)
