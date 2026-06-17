@@ -51,6 +51,9 @@ struct MainProgAggr {
   // (Re)Draw some possible artefacts (picture) as background
   void drawBottomArtefacts(sf::RenderWindow & win);
 
+  // Resize Handler
+  void resizeHandler(sf::RenderWindow & win, AutoScale & autoSc, sf::Vector2u newSize);
+  
   // Post Construction (very Initialization) Init and sync
   void postInitSync(void);
 

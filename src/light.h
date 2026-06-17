@@ -21,14 +21,12 @@
 struct LightS {
 
   explicit LightS(ScreenM & screen) 
-    : X_MID {screen.getWindowXsize() / 2 }
-    , Y_MID { screen.getWindowYsize() / 2 }
-    , mSizing { screen }
+    : mSizing { screen }
     , m_lightMoving { noMove }
     , rays_mode { raysMoving }
     , m_demoMode { false }
   {
-    Dbg::report_info("Init: Lights  ", Y_MID);
+    Dbg::report_info("Init: Lights  ", mSizing.getXcenterM());
     // Init light structures
     reset_light();
   }
@@ -86,10 +84,6 @@ private:
   // Current lights Moving mode
   enum LightMove {noMove, upMove, downMove};
   
-  // Middle of window
-  const int X_MID;
-  const int Y_MID;
-
   const ScreenM & mSizing;
   
   // Main light radius

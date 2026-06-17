@@ -192,3 +192,11 @@ bool AutoScale::rescaleFinished(const VecMinMax vec) const {
     return false;
   }  
 }
+
+void AutoScale::resizeHandler() {
+  winUsable_x_center = m_screen.isFullScreen() ?
+              m_screen.getXcenterM() + m_screen.getRightShiftToCenter()
+                          - static_cast<int>(cLightMargin /2.0) :
+              m_screen.getXcenterM() - static_cast<int>(cLightMargin /2.0);
+  winUsable_y_center = m_screen.getYcenterM() + cHistMargin -2;
+}

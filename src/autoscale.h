@@ -22,17 +22,15 @@ struct AutoScale
   struct VecDelta {int dx; int dy;};
 
   explicit AutoScale(const ScreenM & screen, bool onOff = true)
-  : winUsable_x_center {screen.isFullScreen() ?
-                screen.getXcenterM() + screen.getRightShiftToCenter()
-                            - static_cast<int>(cLightMargin /2.0) :
-                screen.getXcenterM() - static_cast<int>(cLightMargin /2.0)}
-  , winUsable_y_center {screen.getYcenterM() + cHistMargin -2}
-  , m_screen {screen}
+  : m_screen {screen}
   , m_minmax{} // actual start values are set by cycleStart
   , m_optionOn{onOff}
   , m_rescaleActive{false}
   , m_cumulativeFactor{1.0}
   {
+    // Initial autoscale centering, may change after Resize event
+    resizeHandler();
+
     cycleStart();
     Dbg::report_info("Init: AutoScale (Xsize)  ", m_minmax.minX);
   }
@@ -78,13 +76,15 @@ struct AutoScale
     m_cumulativeFactor = 1.0f;
   }
   
+  void resizeHandler();
+  
   private:
 
   // Usable window center used throughout autoscale
-  const int winUsable_x_center;
+  int winUsable_x_center;
 
   // Push figure rather to bottom as it grows up
-  const int winUsable_y_center;
+  int winUsable_y_center;
 
   const ScreenM & m_screen;
   

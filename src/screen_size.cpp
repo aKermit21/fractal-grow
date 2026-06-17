@@ -9,6 +9,7 @@
 
 #include "screen_size.h"
 #include "basics.h"
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <string_view>
 
 float ScreenM::mProportions {1.f};
@@ -133,6 +134,27 @@ sf::RenderWindow ScreenM::initWindow(std::string_view name, bool fullscreen) {
   }
 }
   
+void ScreenM::resizingHandler(sf::RenderWindow & win, sf::Vector2u newSize) {
+  WindowXsize = newSize.x;
+  
+  // Consider Maximum full screen x:y ratio 
+  if (static_cast<float>(newSize.x)/newSize.y > maxXYratio) {
+    // Limit X-axis size
+    WindowXsize = static_cast<unsigned int>(newSize.y * maxXYratio); 
+  } 
+
+  // Utilize whole Y-axis size
+  WindowYsize = newSize.y;
+
+  calcDerivatives();
+  
+  // Do not distort picture
+  sf::View newView(sf::FloatRect({0.f, 0.f}, sf::Vector2f(newSize)));
+  win.setView(newView);
+
+}
+
+
 bool ScreenM::isFullScreen() const {
   return mFullscreen;
 }

@@ -71,6 +71,17 @@ void MainProgAggr::oneStepCfgChange() {
 }
 
  
+void MainProgAggr::resizeHandler(sf::RenderWindow & win, AutoScale & autoScale,
+                                 sf::Vector2u newSize) {
+  // Resizing dimensions itself
+  screen.resizingHandler(win, newSize);
+  // possible redraw light position
+  lightS.reset_light();
+  // autoscale centering
+  autoScale.resizeHandler();
+}
+
+
 void MainProgAggr::resetConfig(bool keyAction) {
   movFluctuate.resumeTimeFlow(); 
   // Mutational grow algo reset

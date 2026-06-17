@@ -10,6 +10,7 @@
 #pragma once
 
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Vector2.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <string_view>
 #include "basics.h"
@@ -41,6 +42,8 @@ struct ScreenM {
   
   sf::RenderWindow initWindow(std::string_view name, bool fullscreen);
 
+  void resizingHandler(sf::RenderWindow & win, sf::Vector2u newSize);
+
   bool isFullScreen() const;
   
   int getWindowXsize() const;
@@ -62,7 +65,7 @@ struct ScreenM {
   int getDesktopYsize() const;
 
 private:
-  // Fixed frame x:y ratio: 6/5 (1200/1000)
+  // Original fixed frame x:y ratio: 6/5 (1200/1000)
   // Maximum full screen x:y ratio <= 4/3
   constexpr static float maxXYratio { 4.f/3 };
   

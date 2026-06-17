@@ -68,7 +68,12 @@ int main(int argc, const char** argv)
         // Window button close
         if (event->is<sf::Event::Closed>()) {
           window.close();
+        } else if (event->is<sf::Event::Resized>()) {
+          if (const auto* resized = event->getIf<sf::Event::Resized>()) {
+            // Handle Resize 
+            fractMain.resizeHandler(window, autoScale, resized->size);
           }
+        }
         // Key pressed event
         else if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
           assert(keyEvent and "shall be non-empty keyEvent here");
@@ -78,7 +83,7 @@ int main(int argc, const char** argv)
           } else {
             if ((keyEvent->code == sf::Keyboard::Key::R) or 
                 (keyEvent->code == sf::Keyboard::Key::F3)) {
-              // Reset
+              // Reset - TODO: try to ReInit
               prim_element.initPrimary(fractMain.screen);
               autoScale.resetAutoScale();
             } // intentionaly lack of else, reset handling continued below
@@ -87,8 +92,8 @@ int main(int argc, const char** argv)
           }
         }
         else {
-          // Another event than window-close or keyboard, maybe mouse?
-          // Anyway igone!
+          // Another event than window-close, resizing or keyboard.
+          // Maybe mouse? Anyway igone!
         }
       }
 

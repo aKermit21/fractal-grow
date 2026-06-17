@@ -119,12 +119,12 @@ void LightS::light_draw(sf::RenderWindow &win, bool tempDeactive){
   win.draw(lrainbow);
   
   // Take position of light from vector (light has opposite y than vector y)
-  float x_pos = (X_MID*2) - (CIRCLE_R *2) - (MAIN_SPOT_R *2);
+  float x_pos = (mSizing.getWindowXsize()) - (CIRCLE_R *2) - (MAIN_SPOT_R *2);
   if (mSizing.isFullScreen()) {
     // Center light elements drawing for Full Screen Mode
     x_pos += mSizing.getRightShiftToCenter();
   }
-  float y_pos = static_cast<float>(Y_MID - s_lightVec.y - MAIN_SPOT_R);
+  float y_pos = static_cast<float>(mSizing.getYcenterM() - s_lightVec.y - MAIN_SPOT_R);
   sf::Vector2f position{x_pos, y_pos};
 
   // Draw Main Light if active
@@ -153,7 +153,8 @@ void LightS::light_draw(sf::RenderWindow &win, bool tempDeactive){
 void LightS::move_light_position_by(int move) {
 
   // limit to vertical size of window
-  if ((s_lightVec.y - move > -Y_MID) and (s_lightVec.y - move < Y_MID)) {
+  if ((s_lightVec.y - move > -mSizing.getYcenterM()) and
+      (s_lightVec.y - move < mSizing.getYcenterM())) {
 
     // transform vector and move main light
     s_lightVec.y -= move;  // vector x move in opposite direction
@@ -287,7 +288,7 @@ sf::VertexArray LightS::create_rays_grid(sf::Vector2f lpos) {
            "Too much grid lines. Possible Infinite loop");
     
   // till top of window with extra margin
-  } while (line_pos.y > - (Y_MID*2)); 
+  } while (line_pos.y > - mSizing.getWindowYsize()); 
   
   // Restart Lines/rays position
   line_pos = lpos;
@@ -308,7 +309,7 @@ sf::VertexArray LightS::create_rays_grid(sf::Vector2f lpos) {
            "Too much grid lines. Possible Infinite loop");
     
   // till bottom of window with extra margin
-  } while (line_pos.y < Y_MID *4);
+  } while (line_pos.y < mSizing.getWindowYsize() *2);
 
   return auxg;
 }
@@ -333,10 +334,10 @@ sf::VertexArray LightS::init_rainbow(){
   sf::VertexArray auxl(sf::PrimitiveType::TriangleFan, cCOLORS_NR+1); // first color repeated
 
   // Take position of light from vector
-  float y_pos = static_cast<float>(Y_MID - s_lightVec.y);
+  float y_pos = static_cast<float>(mSizing.getYcenterM() - s_lightVec.y);
   
   // Central point - right side
-  auxl[0].position = sf::Vector2f((X_MID*2) - CIRCLE_R - 5.f, y_pos);
+  auxl[0].position = sf::Vector2f((mSizing.getWindowXsize()) - CIRCLE_R - 5.f, y_pos);
   if (mSizing.isFullScreen()) {
     // Center position for FullScreen
     auxl[0].position.x += mSizing.getRightShiftToCenter();
@@ -348,7 +349,7 @@ sf::VertexArray LightS::init_rainbow(){
   for (size_t i{1}; i<cCOLORS_NR; ++i) {
     // Converting degress to radians
     angle_rad = myAux::degreesToRadians(angle);
-    auxl[i].position = sf::Vector2f((X_MID*2) - CIRCLE_R - 5.f - (cos(angle_rad)* CIRCLE_R),
+    auxl[i].position = sf::Vector2f(mSizing.getWindowXsize() - CIRCLE_R - 5.f - (cos(angle_rad)* CIRCLE_R),
       y_pos + sin(angle_rad)*CIRCLE_R);
     if (mSizing.isFullScreen()) {
       // Center position for FullScreen
@@ -362,7 +363,7 @@ sf::VertexArray LightS::init_rainbow(){
 
   // Last element with repeated first color to obtain continuum
   angle_rad = myAux::degreesToRadians(angle);
-  auxl[cCOLORS_NR].position = sf::Vector2f((X_MID*2) - CIRCLE_R - 5.f
+  auxl[cCOLORS_NR].position = sf::Vector2f(mSizing.getWindowXsize() - CIRCLE_R - 5.f
      - (cos(angle_rad)* CIRCLE_R), y_pos + sin(angle_rad)*CIRCLE_R); 
   if (mSizing.isFullScreen()) {
     // Center position for FullScreen
@@ -376,7 +377,7 @@ sf::VertexArray LightS::init_rainbow(){
 // Reset or init light structures
 void LightS::reset_light() {
   // Ligth vector - horizontal as y=0 and x (from right to left)_adjusted to centre of window
-  s_lightVec = { -X_MID + 2*static_cast<int>(CIRCLE_R) - MAIN_SPOT_R, 0};
+  s_lightVec = { -mSizing.getXcenterM() + 2*static_cast<int>(CIRCLE_R) - MAIN_SPOT_R, 0};
   rays_mode = raysMoving;
   // create colors rainbow structure
   lrainbow = init_rainbow();
