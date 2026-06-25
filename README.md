@@ -56,14 +56,30 @@ This project is based on [fractal-anim](https://github.com/aKermit21/fractal-ani
 - lyra (C++ arg parser) — embedded as a subproject (see [original lyra source](https://github.com/bfgroup/Lyra))
 - tomlplusplus — embedded as a subproject (also available through package managers)
 
-## Get the Project
+## Using Installer
+This is applicable only to Linux as it uses compiled binary.  
+Install **sfml** and **tomlplusplus** before using for example package manager.  
+Fetch Installer:
+```shell
+curl -O https://raw.githubusercontent.com/aKermit21/fractal-grow/main/scripts/install.sh
+```
+Run Installer:
+```shell
+chmod +x install.sh
+./install.sh
+```
+
+> **_NOTE:_** `install.sh` script can be found in project itself.
+
+## By Project Compilation
+### Get the Project
 Clone the GitHub project:
 ```shell
 git clone https://github.com/aKermit21/fractal-grow.git
 ```
 
-## Compilation
-The procedure below was tested on Linux.
+### Compilation
+The procedure below was tested on Linux (but shall work with possible adaptations also on MacOS and Windows).
 It is recommended to use the Meson build system, as it verifies dependencies, handles subprojects, enables automatic configuration, and supports explicit installation.
 
 ```shell
@@ -75,7 +91,7 @@ meson compile
 ./exfra [-h]   # to run the app directly from the build directory
 ```
 
-## Optional: Explicit Installation of Program, Dependent Libraries, and Files in the System
+### Optional: Explicit Installation of Program, Dependent Libraries, and Files in the System
 ```shell
 meson configure --prefix=$HOME/.local   # optionally, for Linux LOCAL installation
 meson install
@@ -84,13 +100,13 @@ Manually copy the other images (`../image/*.jpg`) to the same location where the
 
 To install the toml++ shared library in the system (which will NOT be installed automatically as a subproject):
 
-### Use a Package Manager
+#### Use a Package Manager
 For example, with pacman:
 ```shell
 sudo pacman -S tomlplusplus
 ```
 
-### Perform a Custom Build
+#### Perform a Custom Build
 One can also build and install it manually:
 
 ```shell
