@@ -16,9 +16,7 @@
 #include "transform.h"
 #include "fluctuate.h"
 #include <SFML/Graphics/PrimitiveType.hpp>
-#include <chrono>
 #include <optional>
-#include <thread>
 
 // Allocate subordinate elements/branches
 // and initialize with structural data
@@ -91,9 +89,6 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
 {
   static long recur_funct_cnt { 0L };
 
-  // needed calculation of time between frames
-  static auto prev_time = std::chrono::high_resolution_clock::now();
-
   // last allocated Core Element level
   static long lastCoreLevel { 0L };
   
@@ -104,22 +99,6 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
     Dbg::report_info_by_type(Dbg::infoTypeElementsDrawnPerCycle, recur_funct_cnt); //report o
     recur_funct_cnt = 0; // reset recurrance counter so it will count per cycle
 
-    // time between frames
-    auto next_time = std::chrono::high_resolution_clock::now();
-    double elapsed_time_ms = 
-      std::chrono::duration<double, std::milli>(next_time - prev_time).count();
-    // Smart report - time perf frame in ms if value is >10% change from previous
-    Dbg::report_info_by_type(Dbg::infoTypeTimePerFrame, elapsed_time_ms);
-
-    // Ensure minimal time between consecutive frame drawing
-    long correctionTime { 0 };
-    if (elapsed_time_ms < cFrac::MinTimePerFrame) {
-      correctionTime = cFrac::MinTimePerFrame - elapsed_time_ms;
-      std::this_thread::sleep_for(std::chrono::milliseconds(correctionTime));
-    }
-    // Omit obove delay for inter frame time calculation
-    prev_time = std::chrono::high_resolution_clock::now();
-  
   } else {
     // action on non-first call
     ++recur_funct_cnt;

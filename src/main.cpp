@@ -57,6 +57,8 @@ int main(int argc, const char** argv)
     sf::RenderWindow window = fractMain.screen.initWindow(windowName,
                                                 options.optFullScreen);
 
+    window.setFramerateLimit(fractMain.timing.getFPS());
+
     // First fractal element (order 0)
     Element prim_element;
     prim_element.initPrimary(fractMain.screen);
@@ -114,6 +116,7 @@ int main(int argc, const char** argv)
       fractMain.drawTopArtefacts(window, autoScale, prim_element);
 
       window.display();
+      fractMain.timing.reportRealTimePerFrame();
     
       if (!autoScale.ifRescaleActive()) {
         // possible signle step change of algo due to animation,

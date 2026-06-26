@@ -9,23 +9,35 @@
 
 #pragma once
 
-#include "lyra/lyra.hpp"
-#include "config.h"
+#include "dbg_report.h"
 
+//
+// Real time related feature(s)
 
-struct OptParams {
-  enum {ok = 10, help, error};
+struct RealTime {
+
+  RealTime(int fps=75)
+    : mTimeStarted { false } 
+    , mFPS { fps }
+  {
+    // he smallest expected FPS
+    if (mFPS < 60) {
+      mFPS = 60;
+    } 
+    Dbg::report_info("Init: RealTime, FPS= ", mFPS);
+  }
   
-  // Default parameters (if not defined given by CLI)
-  bool optDemo {false};
-  bool optGrowingOff {false};
-  int optSpeed {8}; // default speed
-  bool optPictureOff {false};
-  bool optFullScreen {false};
-  int optFPS {75};  // default Frames per sec limit
-  std::string optSnapshot {cPath::cDefaultSnapshot}; 
+  void reportRealTimePerFrame();
+
+  int getFPS();
+
+private:
+    
+  bool mTimeStarted;
+
+  // (maximum) Frames per second
+  int mFPS;
   
-  int parseResult {};
+  std::chrono::high_resolution_clock::time_point mTimeStamp;
+  
 };
-
-OptParams optParse(int argc, const char** argv);

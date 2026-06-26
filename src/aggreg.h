@@ -19,6 +19,7 @@
 #include "opt_lyra.h"
 #include "fluctuate.h"
 #include "picture.h"
+#include "real_time.h"
 
 // Main program aggregate (collection of) structs
 // containing MovWind/MovAnim(animation), Color Palette,
@@ -27,6 +28,7 @@
 struct MainProgAggr {
   explicit MainProgAggr(OptParams opts)
       : screen {opts.optFullScreen}
+      , timing {opts.optFPS}
       , logtxt {opts, screen}
       , movFluctuate {opts}
       , lightS {screen}
@@ -65,6 +67,7 @@ struct MainProgAggr {
 
   // Aggregate of Structs/classes
   ScreenM screen;     // Adjusting sizes to possible full screen mode
+  RealTime timing;    // Real time feature like delay FPS
   LogText logtxt;     // Text, Logging snapshots
   MovFluctuate movFluctuate;   // animation: open, close, wind, growing
   ColorPal colorPal; // color palette

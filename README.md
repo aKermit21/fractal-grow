@@ -69,7 +69,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-> **_NOTE:_** `install.sh` script can be found in project itself.
+> **_NOTE:_** `install.sh` script can be found also in project itself.
 
 ## By Project Compilation
 ### Get the Project
@@ -79,7 +79,7 @@ git clone https://github.com/aKermit21/fractal-grow.git
 ```
 
 ### Compilation
-The procedure below was tested on Linux (but shall work with possible adaptations also on MacOS and Windows).
+The procedure below was tested on Linux (but shall work with possible adaptations also on MacOS and Windows).  
 It is recommended to use the Meson build system, as it verifies dependencies, handles subprojects, enables automatic configuration, and supports explicit installation.
 
 ```shell
@@ -132,7 +132,11 @@ It might be worth trying the demo:
 [./]exfra --demo
 ```
 
-Press F1 at runtime to display available key actions.
+If animation flickers—which can happen on slow machines—increase
+the drawing speed by pressing `PageUp`;
+also try to adjust `--fps` parameter.
+
+Press `F1` at runtime to display list of available key actions.
 
 ## Modification and Adaptation
 

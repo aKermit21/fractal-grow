@@ -36,6 +36,8 @@ OptParams optParse(int argc, const char** argv)
             ["-g"]["--nogrow"]("Off Initial Growing (On by default)")
       | lyra::opt(myArgs.optSpeed, "speed")
             ["-s"]["--speed"]("Initial Speed vs Detail draw [0-20]")
+      | lyra::opt(myArgs.optFPS, "FPS")
+            ["-r"]["--fps"]("Frames per sec limit (>60Hz) ")
       | lyra::opt(myArgs.optSnapshot, "file")
             ["-c"]["--config"]("Config File"); 
 

@@ -49,9 +49,6 @@ namespace cFrac {
   
   // counter mark demo initialization
   inline constexpr int DemoInitCnt { 1 };
-
-  // Minimal time per frame drawing in ms
-  inline constexpr double MinTimePerFrame { 13.3 }; // 75Hz
 }
 
 enum BranchType { upBranch, downBranch, firstBranch };

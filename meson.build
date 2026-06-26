@@ -1,5 +1,5 @@
 project('fractal-grow', 'cpp',
-  version : '0.4',
+  version : '0.4.1',
   default_options : ['warning_level=3', 'cpp_std=c++17',
                      'buildtype=release', 'b_ndebug=if-release'])
 
@@ -22,6 +22,7 @@ my_src = [
  'src/progress.cpp',
  'src/picture.cpp',
  'src/recurrence.cpp',
+ 'src/real_time.cpp',
  'src/screen_size.cpp',
  'src/mut_grow.cpp',
  'src/text_draw.cpp',
