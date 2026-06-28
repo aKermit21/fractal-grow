@@ -13,21 +13,21 @@
 #include "dbg_report.h"
 
 //
-// Pause animation, Display Core Elements (C-key)
+// Pause animation, Display Core Elements (<C>-key)
 
-struct StopFlash : TranAlg {
+struct PauseAni : TranAlg {
 
-  StopFlash(int speed=8) 
+  PauseAni(int speed=8) 
     : TranAlg{ speed }
     , mPauseActive { false }
     , mTimeStarted { false }
     , mCoreElementDisplayRequested { false }
     , mCumulatedTime {}
   {
-    Dbg::report_info("Init: StopFlash  (speed=)", speed);
+    Dbg::report_info("Init: PauseAni  (speed=)", speed);
   }
   
-  // Stop (Pause) animation - intermittently
+  // Stop (Pause)  growing animation - intermittently
   void stopAnimation();
   
   // animation related keys handling

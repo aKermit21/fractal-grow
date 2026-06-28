@@ -12,16 +12,15 @@
 #include "basics.h"
 #include "pause_core.h"
 #include "opt_lyra.h"
-#include <cstddef>
 
 // Modification of Transformation Algorithm 
 // by adding wiggling effect (like from wind) to angle component or
 // by adding growing effect to scale component
 
-struct MovFluctuate : StopFlash {
+struct MovFluctuate : PauseAni {
 
   MovFluctuate(OptParams opts) 
-    : StopFlash { opts.optSpeed }
+    : PauseAni { opts.optSpeed }
     , fluctuateState {true, false}
     , GrowingEnabled {false}
     , windVelocity {}

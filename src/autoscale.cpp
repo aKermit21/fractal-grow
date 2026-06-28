@@ -11,6 +11,8 @@
 #include "dbg_report.h"
 #include "basics.h"
 #include "screen_size.h"
+#include <cassert>
+#include <cmath>
 
 using VecMinMax = Dbg::VecMinMax;
   
@@ -66,12 +68,8 @@ void AutoScale::performAutoscaleCycle(Element & prim, bool fastMode) {
         prim.stem_xy.repositionStemAbsolute(delta.dx, delta.dy);
       } else {
         // then shrink if needed (by factor)
-        auto shrinkStep = cShrinkStepSmall;
-        if (bigRescaleRequired(m_minmax)) {
-          shrinkStep = cShrinkStepHuge;
-        }
-        m_cumulativeFactor *= shrinkStep;
-        prim.stem_xy.shrinkStemCenter(shrinkStep, m_cumulativeFactor,
+        m_cumulativeFactor *= cShrinkStep;
+        prim.stem_xy.shrinkStemCenter(cShrinkStep, m_cumulativeFactor,
                                   winUsable_x_center, winUsable_y_center, m_screen);
       }
     }
@@ -98,58 +96,42 @@ AutoScale::VecDelta AutoScale::centerPicture(bool fastMode) {
   delta.dx = winUsable_x_center - pic_x_center;
   delta.dy = winUsable_y_center - pic_y_center;
 
-  if ((abs(delta.dx) <= cAcceptedDiff) and
-      (abs(delta.dy) <= cAcceptedDiff)) {\
+  if ((std::abs(delta.dx) <= cAcceptedDiff) and
+      (std::abs(delta.dy) <= cAcceptedDiff)) {\
     return cDeltaNoMove; // no movement needed anymore if very small diffrence
   }
 
   // For very big changes move without animation
   if ((std::abs(delta.dx) > m_screen.getWindowXsize()/2.f) or
       (std::abs(delta.dy) > m_screen.getWindowYsize()/2.f)) {
+    Dbg::report_warning("Big AutoScale move - Shall Not happen (|delta|=)",
+                        std::sqrt(delta.dx *delta.dx + delta.dy*delta.dy));
     return delta;
   }
       
+  float myStep {cSmallStep};
   // Consider FastMode
   if (fastMode) {
-    // move to center by big or small step
-    VecDelta stepDelta { 0, 0 };
-    if (delta.dx > cBigStep)  stepDelta.dx = cBigStep; 
-    else if (delta.dx > cSmallStep) stepDelta.dx = cSmallStep;
-    
-    if (delta.dy > cBigStep) stepDelta.dy = cBigStep;
-    else if (delta.dy > cSmallStep) stepDelta.dy = cSmallStep;
-    
-    if (delta.dx < -cBigStep) stepDelta.dx = -cBigStep;
-    else if (delta.dx < -cSmallStep) stepDelta.dx = -cSmallStep;
-  
-    if (delta.dy < -cBigStep) stepDelta.dy = -cBigStep;
-    else if (delta.dy < -cSmallStep) stepDelta.dy = -cSmallStep;
-
-    return stepDelta;
+    if ((std::abs(delta.dx) >= cBigStep) or (std::abs(delta.dy) >= cBigStep)) {
+      myStep = cBigStep;
+    } 
+    // Fallback to Slow mode if delta is too small
   }
-  
-  // move to center only by small steps
+
+  // Move to center by number of consecutive steps
   VecDelta stepDelta { 0, 0 };
-  if (delta.dx > cSmallStep) stepDelta.dx = cSmallStep;
-  if (delta.dy > cSmallStep) stepDelta.dy = cSmallStep;
-  if (delta.dx < -cSmallStep) stepDelta.dx = -cSmallStep;
-  if (delta.dy < -cSmallStep) stepDelta.dy = -cSmallStep;
+  // Make proportional move x vs y
+  if (std::abs(delta.dx) > std::abs(delta.dy)) {
+    if (delta.dx > 0.f) { stepDelta.dx = myStep; }
+    else {stepDelta.dx = -myStep;}
+    stepDelta.dy = stepDelta.dx * delta.dy / delta.dx;
+  } else {
+    if (delta.dy > 0.f) { stepDelta.dy = myStep; }
+    else {stepDelta.dy = -myStep;}
+    stepDelta.dx = stepDelta.dy * delta.dx / delta.dy;
+  }
 
   return stepDelta;
-}
-
-// Check if One Step rescale is prefered
-bool AutoScale::bigRescaleRequired(const VecMinMax vec) const {
-
-  auto xSpan = std::abs(vec.maxX - vec.minX);
-  auto ySpan = std::abs(vec.maxY - vec.minY);
-  if ((xSpan > 2.5*m_screen.getWindowXsize()) or
-      (ySpan > 2.5*m_screen.getWindowYsize())) {
-    return true; 
-  }
-  else { 
-    return false;
-  }
 }
 
 
@@ -193,6 +175,8 @@ bool AutoScale::rescaleFinished(const VecMinMax vec) const {
   }  
 }
 
+// Usable center need to be recalculated (only)
+// if Window Resize system event happened
 void AutoScale::resizeHandler() {
   winUsable_x_center = m_screen.isFullScreen() ?
               m_screen.getXcenterM() + m_screen.getRightShiftToCenter()

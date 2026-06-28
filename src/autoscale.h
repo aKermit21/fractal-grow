@@ -19,7 +19,7 @@
 struct AutoScale
 {
   using VecMinMax = Dbg::VecMinMax;
-  struct VecDelta {int dx; int dy;};
+  struct VecDelta {float dx; float dy;};
 
   explicit AutoScale(const ScreenM & screen, bool onOff = true)
   : m_screen {screen}
@@ -50,8 +50,7 @@ struct AutoScale
   constexpr static float cBigStep { 10.0 }; // move in fastMode
   constexpr static float cAcceptedDiff { 4.0 }; // graphic points
   // Shrinking step
-  constexpr static float cShrinkStepSmall { 0.992f };
-  constexpr static float cShrinkStepHuge { 0.5f };
+  constexpr static float cShrinkStep { 0.996f };
 
   // initialize data for new frame/cycle
   void cycleStart();
@@ -82,7 +81,6 @@ struct AutoScale
 
   // Usable window center used throughout autoscale
   int winUsable_x_center;
-
   // Push figure rather to bottom as it grows up
   int winUsable_y_center;
 
@@ -106,6 +104,5 @@ struct AutoScale
   
   bool rescaleRequired(const VecMinMax vec) const;
   bool rescaleFinished(const VecMinMax vec) const;
-  bool bigRescaleRequired(const VecMinMax vec) const;
 };
 

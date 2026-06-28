@@ -16,7 +16,7 @@
 // Pause animation, Core Elements display
 
 
-bool StopFlash::key_decodation(sf::Keyboard::Key key) {
+bool PauseAni::key_decodation(sf::Keyboard::Key key) {
   switch (key) {
   // Core Elements are linking from primary element to top mutation
   case sf::Keyboard::Key::C: 
@@ -35,17 +35,17 @@ bool StopFlash::key_decodation(sf::Keyboard::Key key) {
   }
 }
 
-bool StopFlash::isPauseActive() const {
+bool PauseAni::isPauseActive() const {
   return mPauseActive;
 }
 
 
-bool StopFlash::isCoreElemDisplay() const {
+bool PauseAni::isCoreElemDisplay() const {
   return mCoreElementDisplayRequested;
 }
 
 // Stop (pause) animation
-void StopFlash::stopAnimation() {
+void PauseAni::stopAnimation() {
   if (!mPauseActive) {
     mPauseActive = true;
     mCumulatedTime += std::chrono::steady_clock::now() - mLastStartedTime;
@@ -53,7 +53,7 @@ void StopFlash::stopAnimation() {
 }
 
 // After Pause
-void StopFlash::resumeTimeFlow() {
+void PauseAni::resumeTimeFlow() {
   if (mPauseActive) {
     mPauseActive = false;
     mLastStartedTime = std::chrono::steady_clock::now();
@@ -61,7 +61,7 @@ void StopFlash::resumeTimeFlow() {
 }
 
 // Time of Game start
-void StopFlash::startTimeCounting() {
+void PauseAni::startTimeCounting() {
   if (!mTimeStarted) {
     mTimeStarted = true;
     mLastStartedTime = std::chrono::steady_clock::now();
@@ -69,13 +69,13 @@ void StopFlash::startTimeCounting() {
   }
 }
 
-void StopFlash::restartTimeCounting() {
+void PauseAni::restartTimeCounting() {
     mTimeStarted = true;
     mLastStartedTime = std::chrono::steady_clock::now();
     mCumulatedTime = std::chrono::duration<double>(0.0);
 }
 
-std::chrono::duration<double> StopFlash::getTimeOfTheGame() {
+std::chrono::duration<double> PauseAni::getTimeOfTheGame() {
   if (!mTimeStarted) {
     return {};
   }

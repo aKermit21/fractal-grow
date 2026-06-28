@@ -12,7 +12,9 @@
 #include "dbg_report.h"
 
 //
-// Real time related feature(s)
+// Real time related feature(s):
+// - FPS control
+// - time per frame info in dev, debug modes
 
 struct RealTime {
 

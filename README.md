@@ -22,7 +22,7 @@ Since a stem usually has different colors on its two ends, the intermediate colo
 The light source, and thus the game, is controlled by the arrow keys (or WASD keys).  
 The horizontal arrows rotate the color, and the vertical arrows move the light source.
 
-Below is a complete list of key functions:
+Below is a list of key functions:
 
 | Key          | Function                                         |
 | ------------ | ------------------------------------------------ |
@@ -42,6 +42,9 @@ Below is a complete list of key functions:
 |              |                                                  |
 | L            | Toggle light on/off                              |
 | G            | Switch grid ray visualization mode               |
+|              |                                                  |
+| J            | Dimm all colors (dJimm) by 20%                   |
+| U            | Up all colors by 20% (reverse to previous)       |
 |              |                                                  |
 | Page Up      | Speed up drawing (less detail)                   |
 | Page Down    | Slow down drawing (more detail)                  |

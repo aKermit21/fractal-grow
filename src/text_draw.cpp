@@ -260,9 +260,11 @@ void TextDraw::endOfGame_draw(sf::RenderWindow & win, const DevData & data,
   };
 
   std::stringstream text_ss;
-  text_ss << "GALAXY Edge Reached!";
+  text_ss << "GALAXY Edge Reached";
   if (demo) {
-    text_ss << " in DEMO Mode";
+    text_ss << " in DEMO Mode!";
+  } else {
+    text_ss << "!";
   }
 
   int tMin = static_cast<int>(data.time.count()) / 60;

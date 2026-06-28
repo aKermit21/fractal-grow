@@ -38,10 +38,10 @@ struct Dbg
   
   // Min/Max drawing used for info and for AutoScale
   struct VecMinMax {
-    int minX;
-    int minY;
-    int maxX;
-    int maxY;
+    float minX;
+    float minY;
+    float maxX;
+    float maxY;
   };
   
   // Log Errors/Warning Options

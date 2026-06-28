@@ -91,17 +91,17 @@ void Stem::recalculateStemWidthCoordinates(float cumulativeFactor,
 void Stem::shrinkStemCenter(float factor, float cumulativeFactor, 
                             int xCenter, int yCenter, const ScreenM & screen) {
 
-  assert(factor <= 1 and factor > 0 and "factor for shrinking expected to be 0..1");
+  assert(factor <= 1.f and factor > 0.f and "factor for shrinking expected to be 0..1");
   assert(xCenter > 0 and yCenter > 0 and "expected plus coordinates");
   
   // Change position to obtain shrinking in relation to (window) central point
-  int x1_center = vec_xy.x - xCenter;
-  x1_center = static_cast<int>(x1_center * factor);
-  vec_xy.x = x1_center + xCenter;
+  float x1_center = vec_xy.x - static_cast<float>(xCenter);
+  x1_center *= factor;
+  vec_xy.x = x1_center + static_cast<float>(xCenter);
   
-  int y1_center = vec_xy.y - yCenter;
-  y1_center = static_cast<int>(y1_center * factor);
-  vec_xy.y = y1_center + yCenter;
+  float y1_center = vec_xy.y - static_cast<float>(yCenter);
+  y1_center *= factor;
+  vec_xy.y = y1_center + static_cast<float>(yCenter);
   
   vec_xy.dx *= factor; 
   vec_xy.dy *= factor;

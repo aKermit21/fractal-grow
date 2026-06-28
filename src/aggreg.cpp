@@ -252,7 +252,7 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     keyFound |= colorPal.key_decodation(key);
     
     // possible animation move control
-    keyFound |= movFluctuate.StopFlash::key_decodation(key);
+    keyFound |= movFluctuate.PauseAni::key_decodation(key);
     
     // possible wind (wobbling) or growing animation control
     keyFound |= movFluctuate.MovFluctuate::key_decodation(key);

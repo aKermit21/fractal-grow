@@ -240,9 +240,10 @@ void Dbg::report_summary(void) noexcept {
     std::cout << "Demo frames: "<< m_demoCnt << '\n'; 
   }
 #ifndef NDEBUG
-  std::cout << "Min/Max /   "<< minmax.minY  << "   \\ \n"; 
-  std::cout << "Min/Max |"<< minmax.minX << "  " << minmax.maxX << "| \n"; 
-  std::cout << "Min/Max \\   "<< minmax.maxY  << "  / \n"; 
+  std::cout << "Min/Max /   "<< static_cast<int>(minmax.minY)  << "   \\ \n"; 
+  std::cout << "Min/Max |"<< static_cast<int>(minmax.minX) << "  "
+                                 << static_cast<int>(minmax.maxX) << "| \n"; 
+  std::cout << "Min/Max \\   "<< static_cast<int>(minmax.maxY)  << "  / \n"; 
 #endif
   std::cout << "Total # of Warnings: "<< warning_cnt << '\n'; 
   std::cout << "Total # of ERRORS: "<< error_cnt << '\n'; 
