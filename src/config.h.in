@@ -17,27 +17,35 @@ namespace cPath {
   inline constexpr std::string_view cFont_file_str = "text_fonts.ttf";
 
   // Possible locations of fonts file (otherwise current directory)
-  inline constexpr std::array<std::string_view, 4> cFontSubdirs = {{
+  inline constexpr std::array<std::string_view, 5> cFontSubdirs = {{
     "fonts/", "../fonts/",
     // linux standard user installation of data by meson using --prefix $HOME/.local
     "$HOME/.local/share/" PROJECT_STR "/", 
-    // linux standard system installation of data by meson (without prefix)
+    // linux standard system installation of data
+    // (package manager vs localy installed)
+    "/usr/share/"  PROJECT_STR  "/", 
     "/usr/local/share/"  PROJECT_STR  "/" }}; 
   
   // Default snapshot / configuration file
   inline constexpr std::string_view cDefaultSnapshot { PROJECT_STR "-cfg.toml"};
   
   // Possible locations of config file (otherwise current directory)
-  inline constexpr std::array<std::string_view, 3> cLogSubdirs = {{
+  inline constexpr std::array<std::string_view, 5> cLogSubdirs = {{
     "config/", "../config/",
     // linux standard user installation of data by meson using --prefix $HOME/.local
-    "$HOME/.local/share/" PROJECT_STR "/" }};
+    "$HOME/.local/share/" PROJECT_STR "/",
+    // linux standard system installation of data
+    "/usr/share/"  PROJECT_STR  "/", 
+    "/usr/local/share/"  PROJECT_STR  "/" }}; 
 
   // Possible locations of image files (otherwise current directory)
-  inline constexpr std::array<std::string_view, 3> cImageSubdirs = {{
+  inline constexpr std::array<std::string_view, 5> cImageSubdirs = {{
     "image/", "../image/",
     // linux standard user installation of data by meson using --prefix $HOME/.local
-    "$HOME/.local/share/" PROJECT_STR "/" }};
+    "$HOME/.local/share/" PROJECT_STR "/",
+    // linux standard system installation of data
+    "/usr/share/"  PROJECT_STR  "/", 
+    "/usr/local/share/"  PROJECT_STR  "/" }}; 
 }
 
 // More configuration data in fractal.h

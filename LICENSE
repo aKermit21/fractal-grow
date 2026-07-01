@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Robert Gajewski
+Copyright (c) 2026 Robert Gajewski (pcc21.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+This project includes "Lato" TrueType fonts licensed under the SIL Open Font License, Version 1.1:
+
+- fonts/text_fonts.ttf — Copyright (c) 2011-2014 by tyPoland Lukasz Dziedzic
+
+The full text of the SIL Open Font License is available in fonts/OFL.txt.
+These fonts are used under their own terms and are not covered by the MIT License.

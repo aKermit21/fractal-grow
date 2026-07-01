@@ -1,5 +1,5 @@
 # fractal-grow
-**Cosmic Fractal — Animation, Game**
+**Cosmic Fractal — 2D Animation, Game**
 
 more descriptive name: *Exponentially Growing Fractal Leaf*
 
@@ -59,7 +59,7 @@ This project is based on [fractal-anim](https://github.com/aKermit21/fractal-ani
 - lyra (C++ arg parser) — embedded as a subproject (see [original lyra source](https://github.com/bfgroup/Lyra))
 - tomlplusplus — embedded as a subproject (also available through package managers)
 
-## Using Installer
+## Using Installer Script
 This is applicable only to Linux as it uses compiled binary.  
 Install **sfml** and **tomlplusplus** before using for example package manager.  
 Fetch Installer:
@@ -73,6 +73,21 @@ chmod +x install.sh
 ```
 
 > **_NOTE:_** `install.sh` script can be found also in project itself.
+
+## Installing via PKGBUILD (Arch Linux)
+
+This method is for **Arch Linux and Arch-based distributions** (Manjaro, EndeavourOS, etc.) using the pacman package manager.
+
+### Fetch the PKGBUILD
+```shell
+curl -O https://raw.githubusercontent.com/aKermit21/fractal-grow/main/scripts/PKGBUILD
+```
+
+### Build and install
+```shell
+makepkg -si
+```
+This builds the package and installs it with all required dependencies.
 
 ## By Project Compilation
 ### Get the Project

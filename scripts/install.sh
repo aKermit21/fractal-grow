@@ -71,8 +71,8 @@ fi
 
 file_name=${binary}_${version}_${os}_${arch}
 
-# My URL for binaries (v0.4.0):
-# https://github.com/aKermit21/fractal-grow/releases/download/v0.4.0/exfra_v0.4.0_linux_64-bit.tar.gz 
+# My URL for binaries (v0.5.0):
+# https://github.com/aKermit21/fractal-grow/releases/download/v0.5.0/exfra_v0.5.0_linux_64-bit.tar.gz 
 
 url="https://github.com/aKermit21/fractal-grow/releases/download/${version}/${file_name}.tar.gz"
 
@@ -118,14 +118,17 @@ while true; do
     esac
 done
 
+echo Using PREFIX=$PREFIX
+
 # Use in install commands
 # Install exec binary
 $SUDO install -Dm755 ${binary} "$PREFIX/bin/${binary}"
 # Install also supporting files
 $SUDO mkdir -p $PREFIX/share/${appl}/
-$SUDO install -Dm644  text_fonts.ttf ${appl}-cfg.toml Galaxy.jpg Moon.jpg Earth.jpg  "$PREFIX/share/${appl}/"
+$SUDO install -Dm644  text_fonts.ttf ${appl}-cfg.toml Galaxy.jpg Moon.jpg Earth.jpg LICENSE-fonts.txt "$PREFIX/share/${appl}/"
+$SUDO mkdir -p $PREFIX/share/licenses/${appl}/
+$SUDO install -Dm644  LICENSE LICENSE-fonts.txt  "$PREFIX/share/licenses/${appl}/"
 
-echo PREFIX=$PREFIX
 
 if [[ $INSTALL_TYPE == local ]]; then
     if ! [[ ":$PATH:" == *":$HOME/.local/bin:"* ]]; then
