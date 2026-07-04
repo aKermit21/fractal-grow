@@ -4,7 +4,7 @@
 _appl=fractal-grow
 
 pkgname=exfra
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Cosmic Fractal--2D Animation, Game."
 arch=('x86_64')
