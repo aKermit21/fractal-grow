@@ -4,7 +4,7 @@
 _appl=fractal-grow
 
 pkgname=exfra
-pkgver=0.5.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Cosmic Fractal--2D Animation, Game."
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=('sfml>=3.0.0' 'tomlplusplus')
 conflicts=(${pkgname}-git)
 
 source=("$url/releases/download/v${pkgver}/exfra_v${pkgver}_linux_64-bit.tar.gz")
-sha256sums=('62234e76ae9466bfdb1f29c438c5292b7111950668420e4d9d4d4c5157af78e6')
+sha256sums=('3c628699a0bf2017ae0ce22414223a1c432aa8529f23506b156f7de06ddbdc6e')
 
 package() {
   # Application Data destination

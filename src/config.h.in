@@ -48,4 +48,4 @@ namespace cPath {
     "/usr/local/share/"  PROJECT_STR  "/" }}; 
 }
 
-// More configuration data in fractal.h
+// More configuration data in basics.h
