@@ -1,5 +1,5 @@
 project('fractal-grow', 'cpp',
-  version : '0.6.0',
+  version : '0.6.1',
   default_options : ['warning_level=3', 'cpp_std=c++17',
                      'buildtype=release', 'b_ndebug=if-release'])
 
@@ -13,6 +13,7 @@ my_src = [
  'src/garbage_coll.cpp',
  'src/demo_func.cpp',
  'src/draw.cpp',
+ 'src/frames_count.cpp',
  'src/light.cpp',
  'src/logtxt.cpp',
  'src/cfg_toml.cpp',

@@ -10,6 +10,7 @@
 #pragma once
 
 #include "basics.h"
+#include "frames_count.h"
 #include "match_col.h"
 #include "screen_size.h"
 #include <cassert>
@@ -37,7 +38,7 @@ struct MutGrow {
   constexpr static int cMaxGrowMutations { 1000 };
 
   // # of Mut Growing elements
-  constexpr static int cMutationProbability { 5000 };
+  constexpr static int cMutationProbability { 8000 };
 
   static_assert(cFrac::NrOfOrders > 2.5f* cMaxGrowMutations,
                 "Proportions between those parameter must be kept");
@@ -61,7 +62,8 @@ struct MutGrow {
   // Initialization which cannot be done with class/instance init
   static void postInit(ScreenM & screen);
   
-  static bool possibleInitGrowMutation(Element * const ptr, const short level);
+  static bool possibleInitGrowMutation(Element * const ptr, Frames & frames,
+                                       const short level);
   // void handleSecGrow(SecGrow * const ptr);
   static void handleGrowMutationStep(void);
 
@@ -103,6 +105,8 @@ struct MutGrow {
   // returns if there is currently growing of Excited Element (globaly)
   static bool isGlobalExcited(void);
 
+  static void notifyRescalingActivity(bool active);
+  
   bool mColorExcite;
 
 private:
@@ -118,7 +122,11 @@ private:
   static int growingCntr; // counter for all
   static long growPtrsCnt; // counting pointers
 
+  // Can be disabled by Pause
   static bool mMutEnabled;
+
+  // This also disables Mutations
+  static bool mRescalingActive;
 
   // # of globally excited element
   static int mGlobalExcited;

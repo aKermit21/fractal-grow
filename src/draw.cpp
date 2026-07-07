@@ -56,9 +56,8 @@ void Element::draw_stem(sf::RenderWindow &win, long order, const bool displayCor
       
     // Flash active or Excited (by light) active mutation
     if ((stem_xy.flash_cnt > 0 and LightS::s_lightActive) or
-      ((mutationGrowPtr != nullptr) and
-            mutationGrowPtr->mColorExcite))  {
-      // Draw Flash version
+      (mutationGrowPtr != nullptr))  {
+      // Draw one of triangle version including Flash
 
       // Filled triangles
       sf::VertexArray triangle(sf::PrimitiveType::Triangles, 3);
@@ -82,7 +81,7 @@ void Element::draw_stem(sf::RenderWindow &win, long order, const bool displayCor
         }
         triangle[0].position = sf::Vector2f(widerX1,stem_xy.y1);
         triangle[2].position = sf::Vector2f(widerX2,stem_xy.y2);
-      } else {
+      } else if ((stem_xy.flash_cnt > 0) and (LightS::s_lightActive)) {
         // Flash colors
         triangle[0].color = ColorPal::
           getCircularColors(ColorPal::flashColors, order).begin_c;
@@ -90,6 +89,14 @@ void Element::draw_stem(sf::RenderWindow &win, long order, const bool displayCor
           getCircularColors(ColorPal::flashColors, order).begin_c;
         triangle[1].color = ColorPal::
           getCircularColors(ColorPal::flashColors, order).end_c;
+      } else {
+        // Growing, no flash
+        triangle[0].color = ColorPal::
+          getCircularColors(ColorPal::normalColors, order).begin_c;
+        triangle[2].color = ColorPal::
+          getCircularColors(ColorPal::normalColors, order).begin_c;
+        triangle[1].color = ColorPal::
+          getCircularColors(ColorPal::normalColors, order).end_c;
       }
       win.draw(triangle);
 

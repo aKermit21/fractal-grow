@@ -20,6 +20,7 @@
 #include "fluctuate.h"
 #include "picture.h"
 #include "real_time.h"
+#include "frames_count.h"
 
 // Main program aggregate (collection of) structs
 // containing MovWind/MovAnim(animation), Color Palette,
@@ -32,9 +33,9 @@ struct MainProgAggr {
       , logtxt {opts, screen}
       , movFluctuate {opts}
       , lightS {screen}
+      , frames {}
       , m_demoActive{opts.optDemo} 
       , m_optPictureOff{opts.optPictureOff}
-      , m_frame_cnt { 0L }
       , m_EndOfGame { false }
       , m_TimeStarted { false }
       , m_PauseActive { false }
@@ -73,9 +74,10 @@ struct MainProgAggr {
   ColorPal colorPal; // color palette
   LightS lightS;     // light source
   PicPres picPres;   // Presenting picture
-
-protected:
+  Frames frames;     // Counting frames
   
+protected:
+
   void resetConfig(bool keyAction);
 
   const bool m_demoActive;
@@ -84,7 +86,6 @@ protected:
 private:
   std::chrono::duration<double> m_GameTime; // in seconds
   std::chrono::steady_clock::time_point m_StartTime; // point in time
-  long m_frame_cnt;
   bool m_EndOfGame;
   bool m_TimeStarted;
   bool m_PauseActive;

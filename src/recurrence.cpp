@@ -7,6 +7,7 @@
 //
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#include "aggreg.h"
 #include "autoscale.h"
 #include "mut_grow.h"
 #include "basics.h"
@@ -84,8 +85,8 @@ bool new_elements_creation(Element * const parent_ptr, const long level)
 
 
 bool recurance_elements_redraw(Element * const parent_ptr, const long level, 
-           sf::RenderWindow &win, const MovFluctuate &algo_anim,
-           AutoScale & autoscale, const ScreenM & sizing)
+           sf::RenderWindow & win, MainProgAggr & aggr,
+           AutoScale & autoscale)
 {
   static long recur_funct_cnt { 0L };
 
@@ -117,11 +118,11 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   }
   
   // Tranform this vector (base on settings copied from parent) to the new one 
-  parent_ptr->transform_vec_stem(algo_anim, sizing, excGrowScale);
+  parent_ptr->transform_vec_stem(aggr.movFluctuate, aggr.screen, excGrowScale);
 
   // Find place for Grow Mutation if initial growing has finished
-  if (!algo_anim.fluctuateState.growingActive) {
-    if (MutGrow::possibleInitGrowMutation(parent_ptr, level)) {
+  if (!aggr.movFluctuate.fluctuateState.growingActive) {
+    if (MutGrow::possibleInitGrowMutation(parent_ptr, aggr.frames, level)) {
       // If allocated update last level
       lastCoreLevel = level; 
     }
@@ -130,7 +131,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
   autoscale.findMinMax(parent_ptr->stem_xy.vec_xy);
 
   // Draw the element
-  parent_ptr->draw_stem(win, level, algo_anim.isCoreElemDisplay());
+  parent_ptr->draw_stem(win, level, aggr.movFluctuate.isCoreElemDisplay());
 
   if (level > cFrac::NrOfOrders) { 
     Dbg::report_once(Dbg::onceLevelsTotal, level);
@@ -170,7 +171,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
     // Traverse next level
     // Propagate (copy) parent position/vector to child (vec_xy is overriten!)
     it->stem_xy.vec_xy = parent_ptr->stem_xy.vec_xy; 
-    recurance_elements_redraw(it, level+1, win, algo_anim, autoscale, sizing);
+    recurance_elements_redraw(it, level+1, win, aggr, autoscale);
   }
   
   // Follow UP branch
@@ -178,7 +179,7 @@ bool recurance_elements_redraw(Element * const parent_ptr, const long level,
     // Traverse next level
     // Propagate (copy) parent position/vector to child (vec_xy is overriten!)
     it->stem_xy.vec_xy = parent_ptr->stem_xy.vec_xy; 
-    recurance_elements_redraw(it, level+1, win, algo_anim, autoscale, sizing);
+    recurance_elements_redraw(it, level+1, win, aggr, autoscale);
   }
   
   return true; // recurance continue

@@ -69,8 +69,8 @@ struct Dbg
   constexpr static long cDrawWarningThreshold { 5'000'000 };
 
   enum MultipleWarning { mltpNone, mltplElementsCreate, mltplElementsDraw, mltplPointers, mltplWarningMax };
-  enum OnceWarningError { onceNone, onceLevelsFromCore,
-                        onceLevelsTotal, oncePointers, onceWarningErrorMax };
+  enum OnceWarningError { onceNone, onceLevelsFromCore, onceLevelsTotal,
+   oncePointers, onceTooLongFrameTime, onceWarningErrorMax };
   
   enum InfoMsgByType { infoTypeElementsDrawnPerCycle, infoTypeTimePerFrame };
 

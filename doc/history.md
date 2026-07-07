@@ -8,3 +8,5 @@
 | 0.4     | 15.06.2026 | Full Screen Mode added (-f).<br>Also Resize window.<br> Release v0.4.0. |
 | 0.4.1   | 26.06.2026 | `--fps` option added |
 | 0.5.0   | 28.06.2026 | Auto Scale more smooth animation.<br> Release v0.5.0 |
+| 0.6.0   | 04.07.2026 | PKGBUILD added.<br> Release v0.6.0 |
+| 0.6.1   | 07.07.2026 | More even generation of mutations.<br> Improved look of mutated stem. |

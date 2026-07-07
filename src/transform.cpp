@@ -108,7 +108,7 @@ void Element::transform_vec_stem(const MovFluctuate & fluctuate,
       }
     }
 
-    stem_xy.reposition_stem(fraction, scale, screen);
+    reposition_stem(fraction, scale, screen);
 
     // rotate and re-scale
     stem_xy.vec_xy.rotateAndRescale(angle, scale);

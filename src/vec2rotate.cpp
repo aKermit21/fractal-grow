@@ -29,14 +29,14 @@ void Vec2D::reposition(const float fraction) {
 
 
 // move along x,y and x+dx,y+dy line - shall be done before rotation
-void Stem::reposition_stem(const float fraction, const float scale,
-                           const ScreenM & screen) {
-  float thickness = 0.0;
+void Element::reposition_stem(const float fraction, const float scale,
+                              const ScreenM & screen) {
+  float thickness {0.f};
 
   // Calculate thickness of stem from range 0.008 - 0 based on vector size
+  // Size can be calculated or provided directly for core/growing elements.
   // Take approx parent vector length : |dx| + |dy| ~ sqrt(dx2 + dy2)
-  float approx_vec =  std::abs(vec_xy.dx) + 
-                       std::abs(vec_xy.dy); 
+  float approx_vec =  std::abs(stem_xy.vec_xy.dx) + std::abs(stem_xy.vec_xy.dy);
 
   // Consider scaling just to be applied (by rotateAndRescale() in transform.cpp)
   approx_vec *= scale;
@@ -53,19 +53,21 @@ void Stem::reposition_stem(const float fraction, const float scale,
         std::sqrt(approx_vec / (static_cast<float>(screen.getWindowYsize())/2.0f));
   }
    
-  // Consider special rule for scale > 1
-  // if (scale > 1.0) {
-  //   thickness = thickness*scale;
-  // }
+  // Larger thickness for core element (growing)
+  if (coreElement) {
+    if (scale > 0.6f) {
+      thickness = thickness*(scale+1);
+    }
+  }
 
-  x1 = vec_xy.x + vec_xy.dx * (fraction - thickness);
-  y1 = vec_xy.y + vec_xy.dy * (fraction - thickness);
-  x2 = vec_xy.x + vec_xy.dx * (fraction + thickness);
-  y2 = vec_xy.y + vec_xy.dy * (fraction + thickness);
+  stem_xy.x1 = stem_xy.vec_xy.x + stem_xy.vec_xy.dx * (fraction - thickness);
+  stem_xy.y1 = stem_xy.vec_xy.y + stem_xy.vec_xy.dy * (fraction - thickness);
+  stem_xy.x2 = stem_xy.vec_xy.x + stem_xy.vec_xy.dx * (fraction + thickness);
+  stem_xy.y2 = stem_xy.vec_xy.y + stem_xy.vec_xy.dy * (fraction + thickness);
 
   // Central Line transformation - older Vec2D::reposition()
-  vec_xy.x = vec_xy.x + (vec_xy.dx * fraction);
-  vec_xy.y = vec_xy.y + (vec_xy.dy * fraction);
+  stem_xy.vec_xy.x = stem_xy.vec_xy.x + (stem_xy.vec_xy.dx * fraction);
+  stem_xy.vec_xy.y = stem_xy.vec_xy.y + (stem_xy.vec_xy.dy * fraction);
 }
 
 

@@ -93,6 +93,15 @@ void Dbg::report_once(OnceWarningError onceType, std::optional<long> i) {
         shouldPrint = true;
       }
       break;
+    case onceTooLongFrameTime:
+      // Warning not an Error
+      type = warningType;
+      if (!onceWarningOccured[onceTooLongFrameTime]) {
+        onceWarningOccured[onceTooLongFrameTime] = true;
+        str = "Too long Frame Time: ";
+        shouldPrint = true;
+      }
+      break;
     case onceNone:
     default:
       assert(false and "Unexpected OnceWarningError");

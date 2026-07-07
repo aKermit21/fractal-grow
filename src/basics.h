@@ -105,9 +105,6 @@ struct Stem{
   float y2 {};
   // move along x,y and x+dx,y+dy line - 
   // affects x,y and x1,y1,x2,y2 - shall be done before rotation;
-  // used for contructing child element based on parent
-  void reposition_stem(float fraction, float scale, const ScreenM & screen);
-  // move by given (absolute) dx dy
   void repositionStemAbsolute(float dx, float dy);
   // Shrink stem according to given (usable) window Center
   void shrinkStemCenter(float factor, float cumulativeFactor,
@@ -196,6 +193,10 @@ struct Element {
                           const ScreenM & screen,
                           std::optional<float> overrideScale);
   virtual void draw_stem(sf::RenderWindow & win, long level, bool coreElemt);
+  // move along x,y and x+dx,y+dy line - 
+  // affects x,y and x1,y1,x2,y2 - shall be done before rotation;
+  // used for contructing child element based on parent
+  void reposition_stem(float fraction, float scale, const ScreenM & screen);
   void initPrimary(const ScreenM & screen);   // Init data for first element 
 };
 

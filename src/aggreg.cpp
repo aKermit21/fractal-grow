@@ -21,7 +21,6 @@
 #include "text_draw.h"
 #include "progress.h"
 #include <SFML/Window/Keyboard.hpp>
-#include <sstream>
 #include <string>
 #include <string_view>
 #include <sys/types.h>
@@ -49,7 +48,7 @@ void MainProgAggr::oneStepCfgChange() {
     // initial growing has finished
     if ((!movFluctuate.fluctuateState.growingActive) and
         (!movFluctuate.isPauseActive())) {
-      ++m_frame_cnt;
+      frames.increment();
       // Store real start time after Initial grow has finished if not already started
       movFluctuate.startTimeCounting();
       MutGrow::handleGrowMutationStep();
@@ -99,7 +98,7 @@ void MainProgAggr::resetConfig(bool keyAction) {
   // Stop display Config Info
   logtxt.stopSnapshotDraw();
   movFluctuate.restartTimeCounting();
-  m_frame_cnt = 0L;
+  frames.reset();
   m_EndOfGame = false;
   m_TimeStarted = false;
 }
@@ -150,7 +149,7 @@ void MainProgAggr::drawTopArtefacts(sf::RenderWindow & win,
   data.ElPtrsCnt = MemAndDebug::getElPtrsCnt();
   data.excitedCnt = MutGrow::getExciteCounter();
   data.excitedAct = MutGrow::isGlobalExcited();
-  data.frames = m_frame_cnt;
+  data.frames = frames.getTotalFrames();
   if (!m_EndOfGame) {
     // update game time as long as game is running
     m_GameTime = movFluctuate.getTimeOfTheGame();

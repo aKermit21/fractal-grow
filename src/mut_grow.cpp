@@ -10,6 +10,7 @@
 #include "mut_grow.h"
 #include "basics.h"
 #include "dbg_report.h"
+#include "frames_count.h"
 #include "match_col.h"
 #include "transform.h"
 #include "light.h"
@@ -21,6 +22,7 @@
 
 // Static data placement
 bool MutGrow::mMutEnabled {true}; // Enable Mutational Grow
+bool MutGrow::mRescalingActive {false};
 int MutGrow::mGlobalExcited {0};
 int MutGrow::growingCntr = 0;
 long MutGrow::growPtrsCnt; 
@@ -32,7 +34,7 @@ void MutGrow::postInit(ScreenM & screen) {
   cYmid = screen.getWindowYsize() / 2; 
 }
 
-bool MutGrow::possibleInitGrowMutation(Element * const ptrElement,
+bool MutGrow::possibleInitGrowMutation(Element * const ptrElement, Frames & frames,
                                         const short level) {
   // this is to trace are we inside growing branch
   static MutGrow * lastMutGrowPtr = nullptr;
@@ -55,7 +57,7 @@ bool MutGrow::possibleInitGrowMutation(Element * const ptrElement,
   }
   
   if (level==0) return false;
-  if (!mMutEnabled) return false;
+  if ((!mMutEnabled) or (mRescalingActive)) return false;
   
   // limit # of Mutation Nodes
   if (((growingCntr < cMaxGrowMutations) and (withinLastBranch))
@@ -64,20 +66,23 @@ bool MutGrow::possibleInitGrowMutation(Element * const ptrElement,
     // Start from relatively lower nodes (to have proper size)
     if (level <= 3+ growingCntr*3 ) {
     
-      // Consider minimal size of element: 8 * default s_SmallVect.
-      if (! ptrElement->stem_xy.vec_xy.vecTooSmall(8* TranAlg::s_SmallVectDefault)) {
-    
-        // consider only higher half of window
-        if (ptrElement->stem_xy.vec_xy.y < cYmid) {
+      if ((frames.isFrameTime2TooLong())                           or 
+          // Consider minimal size of element: 8 * default s_SmallVect.
+          ((!ptrElement->stem_xy.vec_xy.vecTooSmall(
+                              8* TranAlg::s_SmallVectDefault)) and 
+          // consider only higher half of window
+           (ptrElement->stem_xy.vec_xy.y < cYmid))) {
           // consider only elements pointing UP (-y poining up; +y down)
           if (ptrElement->stem_xy.vec_xy.dy
               < -1.8* std::abs(ptrElement->stem_xy.vec_xy.dx)) {
             // beside choose random
-            if ((rand() % cMutationProbability) == 0) {
+            if (((rand() % cMutationProbability) == 0) or
+                (frames.isFrameTime1TooLong())) {
               // (Another) Mutation Growing Node selected
               ++growingCntr;
               lastUsedlevel = level;
               withinLastBranch = true;
+              frames.putStamp();
               // Create new object and add pointer
               auto u_ptr_temp { std::make_unique<MutGrow>() };
               ptrElement->mutationGrowPtr = u_ptr_temp.get(); // ordinary ptr to a structure
@@ -103,7 +108,6 @@ bool MutGrow::possibleInitGrowMutation(Element * const ptrElement,
             }
           }
         }  
-      }
     }
   }
   // No new element assigned
@@ -122,6 +126,11 @@ int MutGrow::getMaxLevel(void) {
 
 bool MutGrow::isGrowingState(void) const {
   return growingState == MutGrow::growingOngoing;
+}
+  
+
+void MutGrow::notifyRescalingActivity(bool active) {
+  mRescalingActive = active;
 }
   
 

@@ -23,8 +23,8 @@
 #include <SFML/Window/Keyboard.hpp>
 
 bool recurance_elements_redraw(Element * const prim_ptr, const long level, 
-                sf::RenderWindow & win, const MovFluctuate & algo_anim,
-                AutoScale & autoScale, const ScreenM & screen);
+                sf::RenderWindow & win, MainProgAggr & aggr,
+                AutoScale & autoScale);
 
 
 int main(int argc, const char** argv)
@@ -108,7 +108,7 @@ int main(int argc, const char** argv)
 
       // Reconfigurate elements according to current algo and Draw in recurrence
       (void)recurance_elements_redraw(&prim_element, 0, window, 
-                fractMain.movFluctuate, autoScale, fractMain.screen); // 0 - start level
+                                fractMain, autoScale); // 0 - start level
 
       autoScale.performAutoscaleCycle(prim_element, MutGrow::isGlobalExcited());
 
@@ -119,6 +119,7 @@ int main(int argc, const char** argv)
       fractMain.timing.reportRealTimePerFrame();
     
       if (!autoScale.ifRescaleActive()) {
+        MutGrow::notifyRescalingActivity(false);
         // possible signle step change of algo due to animation,
         // growing or flash (light effect). Check also End of Game.
         fractMain.oneStepCfgChange();
@@ -126,6 +127,8 @@ int main(int argc, const char** argv)
         fractMain.demoGenerator();
         // Remove not used allocated Clusters every # cycle/frame
         memDbg.pruneElementsClusterVector(200);
+      } else {
+        MutGrow::notifyRescalingActivity(true);
       }
     }
   }
