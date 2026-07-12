@@ -43,6 +43,10 @@ void AutoScale::performAutoscaleCycle(Element & prim, bool fastMode) {
 
   // Collecting picture contour sizes for whole program duration
   Dbg::find_minmax(m_minmax);
+  
+  // Calculate also center position 
+  float picXcenter = (m_minmax.minX + m_minmax.maxX) /2.f;
+  float picYcenter = (m_minmax.minY + m_minmax.maxY) /2.f;
 
   if(m_optionOn) {
   
@@ -50,7 +54,6 @@ void AutoScale::performAutoscaleCycle(Element & prim, bool fastMode) {
       // Rescale Activation
       Dbg::report_info("Rescale Activation ", m_rescaleActive );
       m_rescaleActive = true;
-
     } else if(rescaleFinished(m_minmax) and m_rescaleActive) {
       // Rescale Deactivation
       Dbg::report_info("Rescale Deactivation ", m_rescaleActive );
@@ -61,16 +64,28 @@ void AutoScale::performAutoscaleCycle(Element & prim, bool fastMode) {
 
     if (m_rescaleActive) {
       // Realize single step of rescale
-      VecDelta delta = centerPicture(fastMode); // uses Usable (not absolute) center
-      // first center picure within window
-      if ((delta.dx != cDeltaNoMove.dx) or (delta.dy != cDeltaNoMove.dy)) {
-        // move to center by calculated step
-        prim.stem_xy.repositionStemAbsolute(delta.dx, delta.dy);
-      } else {
-        // then shrink if needed (by factor)
+      // First shrink to target picture size then Center then if needed shrink again
+      VecDelta delta;
+
+      if (initialResizingNeeded(m_minmax)) {
+        // Perform (initial) shrink if needed (by factor)
         m_cumulativeFactor *= cShrinkStep;
         prim.stem_xy.shrinkStemCenter(cShrinkStep, m_cumulativeFactor,
-                                  winUsable_x_center, winUsable_y_center, m_screen);
+                                      picXcenter, picYcenter, m_screen);
+      } else {
+        // then center picure within window
+        // move to center by calculated step
+        delta = centerPicture(fastMode); // uses Usable (not absolute) center
+        if ((delta.dx != cDeltaNoMove.dx) or (delta.dy != cDeltaNoMove.dy)) {
+          prim.stem_xy.repositionStemAbsolute(delta.dx, delta.dy);
+        } else {
+          // then another shrink if needed (by factor)
+          // hovewer this should not happen
+          Dbg::report_warning("Fallback (2nd) shrink used");
+          m_cumulativeFactor *= cShrinkStep;
+          prim.stem_xy.shrinkStemCenter(cShrinkStep, m_cumulativeFactor,
+                                    winUsable_x_center, winUsable_y_center, m_screen);
+        }
       }
     }
   }
@@ -118,8 +133,9 @@ AutoScale::VecDelta AutoScale::centerPicture(bool fastMode) {
     // Fallback to Slow mode if delta is too small
   }
 
-  // Move to center by number of consecutive steps
   VecDelta stepDelta { 0, 0 };
+
+  // Move to center by number of consecutive steps
   // Make proportional move x vs y
   if (std::abs(delta.dx) > std::abs(delta.dy)) {
     if (delta.dx > 0.f) { stepDelta.dx = myStep; }
@@ -135,10 +151,10 @@ AutoScale::VecDelta AutoScale::centerPicture(bool fastMode) {
 }
 
 
-// Below two functions must be correlated
+// Below three functions must be correlated
 // oherwise rescaling oscillations can occure
 
-// Check if rescale has to be started 
+// Check if rescale has to be Started 
 bool AutoScale::rescaleRequired(const VecMinMax vec) const {
   // Possible Right shift to center drawing in full screen mode
   int shift = 0;
@@ -146,9 +162,9 @@ bool AutoScale::rescaleRequired(const VecMinMax vec) const {
     shift = m_screen.getRightShiftToCenter();
   }
 
-  if ((vec.minX < cMargin) or (vec.minY < cMargin) or
-      (vec.maxX > (m_screen.getWindowXsize() - cLightMargin + shift)) or
-      (vec.maxY > (m_screen.getWindowYsize() - cMargin))) {
+  if ((vec.minX < cMargin +shift ) or (vec.minY < cMargin) or
+      (vec.maxX > (m_screen.getWindowXsize() - cLightMargin) +shift) or
+      (vec.maxY > (m_screen.getWindowYsize() - (cMargin)))) {
     return true; 
   }
   else { 
@@ -163,11 +179,14 @@ bool AutoScale::rescaleFinished(const VecMinMax vec) const {
   if (m_screen.isFullScreen()) {
     shift = m_screen.getRightShiftToCenter();
   }
-
-  if ((vec.minX >= cMargin + cHistMargin) and (vec.minY >= cMargin + cHistMargin) and
-      (vec.maxX < (m_screen.getWindowXsize() - (2*cMargin) - cLightMargin + shift)) and
+  
+  // Add another margin
+  auto AcceptedDiff = cAcceptedDiff +1;
+  if ((vec.minX >= cHistMargin - AcceptedDiff +shift) and
+      (vec.minY >= 2*cHistMargin - AcceptedDiff) and
+      (vec.maxX < shift + cHistMargin + mShrunkPicSizeX + AcceptedDiff) and
       // Push image rather to bottom
-      (vec.maxY < (m_screen.getWindowYsize() - (5*cMargin) ))) {
+      (vec.maxY < (m_screen.getWindowYsize() - (2*cMargin) + AcceptedDiff ))) {
     return true; 
   }
   else { 
@@ -175,12 +194,64 @@ bool AutoScale::rescaleFinished(const VecMinMax vec) const {
   }  
 }
 
-// Usable center need to be recalculated (only)
+// Check if initial resizing is needed
+bool AutoScale::initialResizingNeeded(const VecMinMax pic) const {
+  if (std::abs(pic.maxX - pic.minX) > mShrunkPicSizeX) return true;
+  if (std::abs(pic.maxY - pic.minY) > mShrunkPicSizeY) return true;
+  return false;
+}
+
+
+// Recalculate target picture size and usable center need to be recalculated (only)
 // if Window Resize system event happened
 void AutoScale::resizeHandler() {
-  winUsable_x_center = m_screen.isFullScreen() ?
-              m_screen.getXcenterM() + m_screen.getRightShiftToCenter()
-                          - static_cast<int>(cLightMargin /2.0) :
-              m_screen.getXcenterM() - static_cast<int>(cLightMargin /2.0);
-  winUsable_y_center = m_screen.getYcenterM() + cHistMargin -2;
+  // Total Margin corrections for target (small) picture
+  // This shall be compatible with rescaleFinished()
+  // float xMargins = 2.f*cHistMargin +cLightMargin +shift;
+  float xMargins = 2.f*cHistMargin +cLightMargin;
+  float yMargins = 2.f*cHistMargin +2.f*cMargin;
+  
+  assert(m_screen.getWindowXsize() > xMargins);
+  assert(m_screen.getWindowYsize() > yMargins);
+  
+  mShrunkPicSizeX = m_screen.getWindowXsize() -xMargins; 
+  mShrunkPicSizeY = m_screen.getWindowYsize() -yMargins;
+
+  if ((mShrunkPicSizeX <= 0) or (mShrunkPicSizeY <= 0)) {
+    Dbg::report_error("Too small window size", m_screen.getWindowXsize());
+  }
+
+  winUsable_x_center = cHistMargin + mShrunkPicSizeX/2 + m_screen.getRightShiftToCenter();
+  winUsable_y_center = cHistMargin*2 + mShrunkPicSizeY/2;
 }
+
+
+//           Shrunk (expected) Picture size calculation:
+// 
+// shift                         WindowXsize
+//      |---------------------------------------------------------------|
+//      |                                                               |
+//      |                     cHistMargin*2                             |
+//      |                                                               |
+//      |                                                               |
+//      | cHistMargin                           cHistMargin+LightMargin |
+//      |       |---------------------------------------|               |
+//      |       |            mShrunkPicSizeX            |               |
+//      |       |                                       |               | WindowYsize
+//      |       |                                       |               |
+//      |       |                                       |               |
+//      |       |                                       |               |
+//      |       |           Shrunk Picture              |               |
+//      |       |                                       |               |
+//      |       |                       mShrunkPicSizeY |               |
+//      |       |                                       |               |
+//      |       |                                       |               |
+//      |       |                                       |               |
+//      |       |                                       |               |
+//      |       |                                       |               |
+//      |       |---------------------------------------|               |
+//      |                                                               |
+//      |                     2* cMargin (small)                        |
+//      |---------------------------------------------------------------|
+// 
+// shift - only relevant for Full Screen Mode

@@ -16,7 +16,7 @@ bright_cyan='\033[1;36m'
 bright_white='\033[1;37m'
 nc='\033[0m' # No Color
 
-echo -e "${green}-----------------------------"
+echo -e "${bright_blue}-----------------------------"
 echo -e " Cosmic Fractal - Installer"
 echo -e "-----------------------------${nc}"
 
@@ -85,19 +85,19 @@ tar -xzf "${file_name}.tar.gz"
 # Choose type of installation
 
 echo "Installation type:"
-echo -e "  [L] Local  - Install to ${green}\$HOME/.local/${nc} (no root needed)"
+echo -e "  [U] per User (Local)   - Install to ${green}\$HOME/.local/${nc} (no root needed)"
 echo -e "  [G] Global - Install to ${yellow}/usr/local/${nc} (requires sudo)"
 
 while true; do
-    read -p "Choose installation type [L/g]: (deafult: L) " choice
-    choice=${choice:-L}  # Default to L
+    read -p "Choose installation type [U/g]: (deafult: U) " choice
+    choice=${choice:-U}  # Default to U
     
     case "$choice" in
-        [Ll]*)
+        [Uu]*)
             PREFIX="$HOME/.local"
             SUDO=""
             INSTALL_TYPE="local"
-            echo -e "${bright_yellow}Installing ${cyan}${appl} Locally...${nc}"
+            echo -e "${bright_yellow}Installing ${cyan}${appl} per User...${nc}"
             break
             ;;
         [Gg]*)
@@ -113,7 +113,7 @@ while true; do
             break
             ;;
         *)
-            echo -e "${red}Invalid choice. Please enter L or G.${nc}"
+            echo -e "${red}Invalid choice. Please enter U or G.${nc}"
             ;;
     esac
 done

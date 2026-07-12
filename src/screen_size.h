@@ -80,7 +80,7 @@ private:
   float PrimStemWidth;
   
   // Derivatives
-  // Window size centre in accuracy units
+  // Window size centre
   float XcenterM;
   float YcenterM;
 

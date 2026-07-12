@@ -37,17 +37,17 @@ struct AutoScale
 
   
   // Window margins considered in start or stop Rescale algo
-  constexpr static int cMargin { 5 };
+  constexpr static int cMargin { 12 };
   // more room at the right expected because of light size
   constexpr static int cLightMargin { 80 }; 
   // margin top histeresis
-  constexpr static int cHistMargin { 50 };
+  constexpr static int cHistMargin { 80 };
   // NO mevement, centering, needed
   constexpr static VecDelta cDeltaNoMove { 0, 0 };
   
   // Single step move (centering)
   constexpr static float cSmallStep { 3.0 }; // graphic points
-  constexpr static float cBigStep { 10.0 }; // move in fastMode
+  constexpr static float cBigStep { 5.0 }; // move in fastMode
   constexpr static float cAcceptedDiff { 4.0 }; // graphic points
   // Shrinking step
   constexpr static float cShrinkStep { 0.996f };
@@ -87,8 +87,11 @@ struct AutoScale
   const ScreenM & m_screen;
   
   // finding edges (min/max) of all elements per last frame 
-  // (in multiplied vector size)
   VecMinMax m_minmax;
+  
+  // Maximum expected size of picture after autoscale shrinking
+  float mShrunkPicSizeX;
+  float mShrunkPicSizeY;
 
   // Rescale (option) is switched On
   bool m_optionOn;
@@ -104,5 +107,6 @@ struct AutoScale
   
   bool rescaleRequired(const VecMinMax vec) const;
   bool rescaleFinished(const VecMinMax vec) const;
+  bool initialResizingNeeded(const VecMinMax vec) const;
 };
 
