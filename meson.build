@@ -1,5 +1,5 @@
 project('fractal-grow', 'cpp',
-  version : '0.6.2',
+  version : '0.7.0',
   default_options : ['warning_level=3', 'cpp_std=c++17',
                      'buildtype=release', 'b_ndebug=if-release'])
 

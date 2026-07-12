@@ -11,3 +11,4 @@
 | 0.6.0   | 04.07.2026 | PKGBUILD added.<br> Release v0.6.0 |
 | 0.6.1   | 07.07.2026 | More even generation of mutations.<br> Improved look of mutated stem. |
 | 0.6.2   | 11.07.2026 | Auto Scale rework:<br> First resize then centering. |
+| 0.7.0   | 11.07.2026 | Release of the above |
