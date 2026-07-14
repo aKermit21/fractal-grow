@@ -1,10 +1,9 @@
 # Maintainer: Robert Gajewski (robert.gajewski@protonmail.com)
 # Contributor: Original Author: Maintainer
 # bin variant: uses precompiled binary git release assets
-_appl=fractal-grow
 
 pkgname=exfra
-pkgver=0.6.0
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="Cosmic Fractal--2D Animation, Game."
 arch=('x86_64')
@@ -12,9 +11,10 @@ url="https://github.com/aKermit21/fractal-grow/"
 license=('MIT')
 depends=('sfml>=3.0.0' 'tomlplusplus')
 conflicts=(${pkgname}-git)
+_appl=${pkgname}
 
 source=("$url/releases/download/v${pkgver}/exfra_v${pkgver}_linux_64-bit.tar.gz")
-sha256sums=('3c628699a0bf2017ae0ce22414223a1c432aa8529f23506b156f7de06ddbdc6e')
+sha256sums=('0398e9a4124a1a9af078e34e97fcb0a66085aaed603dac7440233387161c61fc')
 
 package() {
   # Application Data destination
@@ -27,7 +27,7 @@ package() {
   # Application Data
   install -Dm644 text_fonts.ttf "$_destdir/text_fonts.ttf"
   install -Dm644 LICENSE-fonts.txt "$_destdir/OFL.txt"
-  install -Dm644 ${_appl}-cfg.toml "$_destdir/${_appl}-cfg.toml"
+  install -Dm644 fractal-grow-cfg.toml "$_destdir/fractal-grow-cfg.toml"
   install -Dm644 Galaxy.jpg "$_destdir/Galaxy.jpg"
   install -Dm644 Earth.jpg "$_destdir/Earth.jpg"
   install -Dm644 Moon.jpg "$_destdir/Moon.jpg"
