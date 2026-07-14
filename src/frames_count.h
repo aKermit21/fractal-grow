@@ -24,7 +24,7 @@ struct Frames {
 
   // cTime1 frames after which time is assumed too long
   constexpr static int cTime1 { 500 };
-  constexpr static int cTime2 { static_cast<int>(1.5) *cTime1 };
+  constexpr static int cTime2 { static_cast<int>(1.5 *cTime1) };
   
   void reset(void);
   void increment(void);
