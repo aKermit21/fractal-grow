@@ -49,6 +49,8 @@ Below is a list of key functions:
 | Page Up      | Speed up drawing (less detail)                   |
 | Page Down    | Slow down drawing (more detail)                  |
 
+more complete list can be found on dedicated [documentation site](https://exfra.pcc21.com/)
+
 # Preceding Project
 
 This project is based on [fractal-anim](https://github.com/aKermit21/fractal-anim.git) by the same author. Both can use the same initial configuration file(s). (In fact, the previous project was used to design the initial fractal leaf shapes and colors.)
@@ -156,7 +158,7 @@ also try to adjust `--fps` parameter.
 
 Press `F1` at runtime to display list of available key actions.
 
-## Modification and Adaptation
+## Modifications
 
 To modify and test changed code, it is recommended to use a separate build directory (e.g., `build-dev/`) containing a modified build settings instance:
 

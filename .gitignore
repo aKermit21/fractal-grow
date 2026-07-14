@@ -8,6 +8,14 @@
 **/cmp.bat
 # contents of this subdirectory - seems clangd runtime
 .idea/
+# docmd directories
+site/
+node_modules/
+assets/
+# help directories
+package/
+supp-doc/
+backup/
 # build directories
 **/build
 **/build-*
