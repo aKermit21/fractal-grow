@@ -170,6 +170,6 @@ meson configure --buildtype=custom --optimization=2
 This will enable assertions and extensive logging.
 
 # Screenshots
-![Game Over](doc/Game-over.png "Game Over")
+![Game Over](assets/images/Game-over.png "Game Over")
 
-![Demo Runnning](doc/Demo-running.png "Demo running")
+![Demo Runnning](assets/images/Demo-running.png "Demo running")

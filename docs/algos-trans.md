@@ -1,4 +1,9 @@
-# Transformation Algorithms
+---
+title: "Transformation Algo"
+description: "Transformation Algorithm"
+---
+
+# Transformation Algorithms 📐
 To tranform next order (level) elements from previous one
 
 ## T_Algo_Arr_Symm
@@ -46,6 +51,6 @@ Array size is `cFrac::NrOfOrders +1` as result of:
 - 0th level is reserved for primary stem (not transformed from previous);
 - 1..NrOfOrders - following levels/generations of objects/stems.
 ### NrOfElements
-Following branches Up and Down.
-They are counted as usually in C: 0..NrOfElements-1
+Follows both branches Up and Down.
+They are counted as usually in C: `0..NrOfElements-1`.
 
