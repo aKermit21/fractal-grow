@@ -45,7 +45,8 @@ struct MainProgAggr {
 
   // General key decodation
   // can be dispatched to subordinate classes/structs
-  void key_decodation(const sf::Keyboard::Key key, Element & prim_element);
+  // returns true if key action indicates window/application to be closed
+  bool key_decodation(const sf::Keyboard::Key key, Element & prim_element);
   
   // (Re)Draw some possible artefacts on top of fractal structure
   void drawTopArtefacts(sf::RenderWindow & win, const AutoScale & rescale,
@@ -65,7 +66,7 @@ struct MainProgAggr {
 
   // Single demo step
   void demoGenerator(void);
-
+  
   // Aggregate of Structs/classes
   ScreenM screen;     // Adjusting sizes to possible full screen mode
   RealTime timing;    // Real time feature like delay FPS
@@ -84,6 +85,10 @@ protected:
   const bool m_optPictureOff;
 
 private:
+
+  // Handles double press (confirmation) to exit
+  bool exitHandler(const sf::Keyboard::Key key);
+
   std::chrono::duration<double> m_GameTime; // in seconds
   std::chrono::steady_clock::time_point m_StartTime; // point in time
   bool m_EndOfGame;

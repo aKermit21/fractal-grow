@@ -91,7 +91,7 @@ void TextDraw::help_draw(sf::RenderWindow &win) const {
     " G - Switch Grid rays visualisation mode\n\n"
     " <Space> - Pause / Freeze Mutations\n"
     " <Enter> - Resume Mutations\n\n"
-    " X - EXit\n"
+    " X, Q or Esc (x2) - EXit, Quit\n"
     " R - Reset\n\n"
     " PageUp - Speed Up (less details)\n"
     " PageDown - Speed Down (more details)\n\n"
@@ -120,6 +120,33 @@ void TextDraw::welcome_draw(sf::RenderWindow &win, int speed) const {
     text.setStyle(sf::Text::Regular);
     text.setFillColor(sf::Color::White);
     sf::Vector2f myPostion(30, 30);
+    text.setPosition(myPostion);
+    // Draw it
+    win.draw(text);
+  }
+}
+
+void TextDraw::confirmationExit_draw(sf::RenderWindow &win) const {
+  if (m_font_loaded) {
+    std::stringstream text_ss;;
+    text_ss << "Confirm EXIT\n";
+    text_ss << "by pressing the same key again";
+    int fontSize = 40;
+    sf::Text text(m_font, text_ss.str(), fontSize);
+    text.setStyle(sf::Text::Regular);
+    text.setFillColor(sf::Color::Red);
+    text.setLineAlignment(sf::Text::LineAlignment::Center);
+
+    float xPos = mSizing.getWindowXsize();
+    if (mSizing.isFullScreen()) {
+      xPos = mSizing.getDesktopXsize();
+    }
+    xPos /= 2.f;
+    
+    // At top but with some margin
+    float yPos = fontSize / 2.f;
+
+    sf::Vector2f myPostion(xPos, yPos);
     text.setPosition(myPostion);
     // Draw it
     win.draw(text);

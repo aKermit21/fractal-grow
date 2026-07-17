@@ -32,6 +32,7 @@ struct LogText {
     , help_draw_cnt { 0 }
     , speed_scale_draw_cnt { 0 }
     , m_snapshot_info_active { false }
+    , m_exit_confirm_active { false }
     , m_developer_draw_active { false }
     , mSizing { screen }
     , m_scale { 1.0f }
@@ -61,6 +62,9 @@ struct LogText {
   // after loading snapshot with F3
   void startSnapshotDraw(void);
   void stopSnapshotDraw(void);
+  // Request for drawing Exit Confirmation - Esc, Q, X
+  void startConfirmExitDraw(void);
+  void stopConfirmExitDraw(void);
   
   // Optional Info
   void switchDevDraw(void);
@@ -70,6 +74,7 @@ struct LogText {
   void pauseDraw(sf::RenderWindow & win) const; 
   void speed_draw(sf::RenderWindow & win, int speed);
   void snapshot_draw(sf::RenderWindow & win); 
+  void confirmationExit_draw(sf::RenderWindow & win); 
   void developer_draw(sf::RenderWindow & win, TextDraw::DevData & data) const ; 
   
   // Dispatch draw
@@ -95,6 +100,7 @@ private:
   // To draw for several frames Speed after its change
   int speed_scale_draw_cnt;
   bool m_snapshot_info_active;
+  bool m_exit_confirm_active;
   bool m_developer_draw_active;
   const ScreenM & mSizing;
   

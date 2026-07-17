@@ -79,23 +79,19 @@ int main(int argc, const char** argv)
         // Key pressed event
         else if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
           assert(keyEvent and "shall be non-empty keyEvent here");
-          // Close on X and Escape
-          if (keyEvent->code == sf::Keyboard::Key::X) {
-            window.close();
-          } else {
-            if ((keyEvent->code == sf::Keyboard::Key::R) or 
-                (keyEvent->code == sf::Keyboard::Key::F3)) {
-              // Reset - TODO: try to ReInit
-              prim_element.initPrimary(fractMain.screen);
-              autoScale.resetAutoScale();
-            } // intentionaly lack of else, reset handling continued below
-            // Further Key decodation dispatcher
-            fractMain.key_decodation(keyEvent->code, prim_element);
-          }
+          if ((keyEvent->code == sf::Keyboard::Key::R) or 
+              (keyEvent->code == sf::Keyboard::Key::F3)) {
+            // Reset - TODO: try to ReInit from config
+            prim_element.initPrimary(fractMain.screen);
+            autoScale.resetAutoScale();
+          } // intentionaly lack of else, reset handling continued below
+          // Further Key decodation handling and dispatching
+          bool close = fractMain.key_decodation(keyEvent->code, prim_element);
+          if (close) window.close();
         }
         else {
           // Another event than window-close, resizing or keyboard.
-          // Maybe mouse? Anyway igone!
+          // Maybe mouse? Anyway ignore!
         }
       }
 

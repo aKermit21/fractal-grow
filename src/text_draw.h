@@ -51,6 +51,7 @@ struct TextDraw {
 
   // Real draw
   void help_draw(sf::RenderWindow & win) const; 
+  void confirmationExit_draw(sf::RenderWindow & win) const; 
   void pauseDraw(sf::RenderWindow & win) const; 
   void welcome_draw(sf::RenderWindow & win, int speed) const; 
   void speed_draw(sf::RenderWindow & win, int speed) const; 

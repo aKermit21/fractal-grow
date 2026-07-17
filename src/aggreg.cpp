@@ -10,6 +10,7 @@
 #include "aggreg.h"
 #include "autoscale.h"
 #include "dbg_report.h"
+#include "logtxt.h"
 #include "pause_core.h"
 #include "colors.h"
 #include "basics.h"
@@ -80,6 +81,27 @@ void MainProgAggr::resizeHandler(sf::RenderWindow & win, AutoScale & autoScale,
   autoScale.resizeHandler();
 }
 
+// Handles double press (confirmation) to exit
+bool MainProgAggr::exitHandler(const sf::Keyboard::Key key) {
+  static sf::Keyboard::Key prevKey { sf::Keyboard::Key::Unknown };
+  // static bool doublePress { false };
+
+  if ((key == sf::Keyboard::Key::X) or
+      (key == sf::Keyboard::Key::Q) or 
+      (key == sf::Keyboard::Key::Escape)) {
+    if (key == prevKey) {
+      // already double press - Exit
+      return true;
+    }
+    // Ask for confirmation by double press
+    logtxt.startConfirmExitDraw();
+  } else {
+    logtxt.stopConfirmExitDraw();
+  }
+  
+  prevKey = key;
+  return false;
+}
 
 void MainProgAggr::resetConfig(bool keyAction) {
   movFluctuate.resumeTimeFlow(); 
@@ -134,6 +156,9 @@ void MainProgAggr::drawTopArtefacts(sf::RenderWindow & win,
   
   // Draw Help if requested
   logtxt.help_draw(win);
+  
+  // Draw Exit Confirm if needed
+  logtxt.confirmationExit_draw(win);
 
   // Active Pause info
   if (movFluctuate.isPauseActive()) {
@@ -188,8 +213,12 @@ void MainProgAggr::drawBottomArtefacts(sf::RenderWindow & win) {
 
 // General key decodation
 // can be dispatched to subordinate classes/structs
-void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
+bool MainProgAggr::key_decodation(const sf::Keyboard::Key key,
                                   Element& prim_element) {
+
+  // Exit Handler needs to see all keys for its logic
+  if (exitHandler(key))  return true;
+    
   if (key == sf::Keyboard::Key::Space) {
     // Stop both types of animation
     movFluctuate.stopAnimation(); // Pause time flow
@@ -210,8 +239,7 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     movFluctuate.resumeTimeFlow();
     m_PauseActive = false;
   }
-  else if ((key == sf::Keyboard::Key::F1) or
-           (key == sf::Keyboard::Key::Escape)) {
+  else if (key == sf::Keyboard::Key::F1) {
     // Help text will be appearing for some time
     logtxt.startHelpDraw();
   } 
@@ -267,7 +295,7 @@ void MainProgAggr::key_decodation(const sf::Keyboard::Key key,
     // Key decodation successfull by some base functionality/class
     if (keyFound) {  }
   }
-  
+  return false;
 }
 
 // Single demo step

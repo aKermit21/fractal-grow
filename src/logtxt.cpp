@@ -37,6 +37,16 @@ void LogText::startSnapshotDraw(void) {
   m_snapshot_info_active = true; 
 }
 
+// Request for drawing Exit Confirmation
+void LogText::startConfirmExitDraw(void) {
+  m_exit_confirm_active = true; 
+}
+
+// Request for drawing Exit Confirmation
+void LogText::stopConfirmExitDraw(void) {
+  m_exit_confirm_active = false; 
+}
+
 void LogText::stopSnapshotDraw(void) {
   m_snapshot_info_active = false; 
 }
@@ -72,6 +82,13 @@ void LogText::snapshot_draw(sf::RenderWindow & win) {
   }
 }
 
+
+void LogText::confirmationExit_draw(sf::RenderWindow & win) {
+  if (m_exit_confirm_active) {
+    textDraw.confirmationExit_draw(win);
+  }
+}
+  
 void LogText::pauseDraw(sf::RenderWindow & win) const {
   textDraw.pauseDraw(win);
 }
