@@ -17,3 +17,4 @@ description: "Versions description"
 | 0.6.1   | 07.07.2026 | More even generation of mutations.  Improved look of mutated stem. |
 | 0.6.2   | 12.07.2026 | Auto Scale rework:  First resize then centering. |
 | 0.7.0   | 12.07.2026 | Release v0.7.0 |
+| 0.7.1   | 21.07.2026 | Exit by double tap. Pictures from store (Burj Kalifa, NY city). |

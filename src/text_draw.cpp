@@ -340,12 +340,16 @@ void TextDraw::pictureInfo_draw(sf::RenderWindow & win, const std::string & info
     sf::Text text(m_font, info, cFontSize);
     text.setStyle(sf::Text::Regular);
     text.setFillColor({140,140,140,255}); // Gray
+
     // Locate at bottom-right
+    text.setLineAlignment(sf::Text::LineAlignment::Right);
+
     float xPos = mSizing.getWindowXsize();
     if (mSizing.isFullScreen()) {
       xPos = mSizing.getDesktopXsize();
     }
-    xPos *= 2.f/3.f;
+    xPos -= cFontSize;
+    
     float yPos = mSizing.getWindowYsize();
     if (mSizing.isFullScreen()) {
       yPos = mSizing.getDesktopYsize();

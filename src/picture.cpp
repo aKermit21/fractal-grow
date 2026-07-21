@@ -89,16 +89,16 @@ std::string PicPres::searchImageFilePath(const std::string_view imageFileStr) {
   do {
     dirpath_str = cPath::cImageSubdirs[dir_index];
     (void)TextDraw::replace_home_alias(dirpath_str);
-    std::filesystem::directory_entry imagePath{dirpath_str};
-    // Check if subdirectory exists
-    if (imagePath.exists()) {
+    // std::filesystem::directory_entry imagePath{dirpath_str};
+    filepath_str = dirpath_str; 
+    filepath_str.append(imageFileStr);
+    // Check if picture file exists
+    if (fileExists(filepath_str)) {
       mImageSubdirState = sDExists;
-      filepath_str = dirpath_str; 
-      filepath_str.append(imageFileStr);
       Dbg::report_info("Image file location found/set to: " + filepath_str);
     } else {
       mImageSubdirState = sDNotExists;
-      Dbg::report_info("Possible Image (sub)directory Not found: " + dirpath_str);
+      Dbg::report_info("Possible Image location NOT found: " + filepath_str);
       // if (sub)directory not found, use current directory
       filepath_str = imageFileStr;
     }
@@ -111,6 +111,12 @@ std::string PicPres::searchImageFilePath(const std::string_view imageFileStr) {
   return filepath_str;
 }
   
+
+namespace fs = std::filesystem;
+
+bool PicPres::fileExists(const std::string& path) {
+    return fs::exists(path) && fs::is_regular_file(path);
+}
 
 // Takes care to load texture/picture once only
 sf::Texture * TextureManager::load(const std::string& name,

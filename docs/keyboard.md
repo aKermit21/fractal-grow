@@ -11,8 +11,8 @@ which implements appropriate action:
 
 | Key | Class | Function |
 | -----------| -------------| --------|
-| `F1` | Help | Print Key Functions on screen (short list) |
-| `X` | main()  | E**X**it |
+| `F1` | MainProgAggr | Print Key Functions on screen (short list) |
+| `X`, `Q` or `Esc` (2x) |   | E**X**it, **Q**uit |
 | | | |
 |  `↑Up` or `W`    | |  Light color rotation
 |  `↓Down` or `S`  | |  rotation reversed

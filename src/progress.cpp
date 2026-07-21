@@ -224,6 +224,53 @@ ImageRec findImageScale(const float size) {
         // Man figure ?
     }
     
+    if (sRec.inM.has_value()) {
+        // m range
+        float tSize = *sRec.inM;
+        // Display range
+        if ((tSize > 4) and (tSize < 30)) {
+            // *** Testing - Begin ***
+            // Only use/uncomment below section while testing picture insert
+            // imRec.found = true;
+            // imRec.file = "burj_khalifa.jpg";
+            // imRec.text = "Testing!!! whatever image";
+            // // Size of an object (100%)
+            // imRec.scale = 5.f / tSize;
+            // *** Testing - end ***
+        }
+        else if ((tSize > 50) and (tSize < 200)) {
+            // *** Testing - Begin ***
+            // Only use/uncomment below section while testing picture insert
+            // imRec.found = true;
+            // imRec.file = "not_found.jpg";
+            // imRec.text = "Testing!!! not found image";
+            // // Size of an object (100%)
+            // imRec.scale = 100.f / tSize;
+            // *** Testing - end ***
+        }
+        else if ((tSize > 300) and (tSize < 5000))  {
+            imRec.found = true;
+            imRec.file = "burj_khalifa.jpg";
+            imRec.text = "of the the order of a skyscraper - Burj Khalifa";
+            // Size of an object (100%)
+            imRec.scale = 800.f / tSize;
+        }
+    }
+    
+
+    if (sRec.inKm.has_value()) {
+        // Km range
+        float tSize = *sRec.inKm;
+        // Display range
+        if ((tSize > 10) and (tSize < 100)) {
+            imRec.found = true;
+            imRec.file = "ny_city.jpg";
+            imRec.text = "of the order of a Big City's (like New York) size";
+            // Size of an object (100%)
+            imRec.scale = 20.f / tSize;
+        }
+    }
+    
     if (sRec.inMm.has_value()) {
         // MegaMeters / thous.km range
         float tSize = *sRec.inMm;

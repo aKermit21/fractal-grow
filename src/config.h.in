@@ -40,12 +40,12 @@ namespace cPath {
 
   // Possible locations of image files (otherwise current directory)
   inline constexpr std::array<std::string_view, 5> cImageSubdirs = {{
-    "image/", "../image/",
     // linux standard user installation of data by meson using --prefix $HOME/.local
     "$HOME/.local/share/" PROJECT_STR "/",
-    // linux standard system installation of data
+    // linux standard system (global) installation of data
     "/usr/share/"  PROJECT_STR  "/", 
-    "/usr/local/share/"  PROJECT_STR  "/" }}; 
+    "/usr/local/share/"  PROJECT_STR  "/",
+    "image/", "../image/" }};
 }
 
 // More configuration data in basics.h

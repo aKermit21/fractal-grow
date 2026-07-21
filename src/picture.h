@@ -57,6 +57,8 @@ private:
   // Establish full image file path
   std::string searchImageFilePath(const std::string_view imageFile);
   
+  bool fileExists(const std::string& path);
+  
   TextureManager texManager;
   
   SubDirState mImageSubdirState;

@@ -43,7 +43,9 @@ else
     exit 1
 fi
   
+# Long application name
 appl=fractal-grow
+# Binary, packet, short application name
 binary=exfra
 arch=$(uname -m)
 os=$(uname -s)
@@ -71,10 +73,15 @@ fi
 
 file_name=${binary}_${version}_${os}_${arch}
 
-# My URL for binaries (v0.5.0):
+# My Github URL for binaries (v0.5.0):
 # https://github.com/aKermit21/fractal-grow/releases/download/v0.5.0/exfra_v0.5.0_linux_64-bit.tar.gz 
+# My project URL for additional background images
+# https://pcc21.com/upload/store/ny_city.jpg
 
 url="https://github.com/aKermit21/fractal-grow/releases/download/${version}/${file_name}.tar.gz"
+url_store="https://pcc21.com/upload/store"
+
+images_from_store=("burj_khalifa.jpg" "ny_city.jpg")
 
 echo -e "${bright_yellow}Downloading ${cyan}${appl} ${version} for ${os} ...${nc}"
 curl -sLO "$url"
@@ -118,16 +125,33 @@ while true; do
     esac
 done
 
+
 echo Using PREFIX=$PREFIX
 
-# Use in install commands
 # Install exec binary
 $SUDO install -Dm755 ${binary} "$PREFIX/bin/${binary}"
-# Install also supporting files
+
+# Install basic supporting files
 $SUDO mkdir -p $PREFIX/share/${appl}/
+# all from GitHub page
 $SUDO install -Dm644  text_fonts.ttf ${appl}-cfg.toml Galaxy.jpg Moon.jpg Earth.jpg LICENSE-fonts.txt "$PREFIX/share/${appl}/"
 $SUDO mkdir -p $PREFIX/share/licenses/${appl}/
 $SUDO install -Dm644  LICENSE LICENSE-fonts.txt  "$PREFIX/share/licenses/${appl}/"
+
+# Additional Pictures fetched directly from dedicated project/store url
+echo -e "${bright_yellow}Fetching ${cyan}additional ${appl} pictures...${nc}"
+
+#Additional Pictures placement
+for image in "${images_from_store[@]}"; do
+    echo "$image"
+    license=LICENSE_"${image%.jpg}.txt"
+    echo "$license"
+    curl -sLO "$url_store/$image"
+    curl -sLO "$url_store/$license"
+
+    $SUDO install -Dm644  $image $license "$PREFIX/share/${appl}/"
+    $SUDO install -Dm644  $license  "$PREFIX/share/licenses/${appl}/"
+done
 
 
 if [[ $INSTALL_TYPE == local ]]; then
