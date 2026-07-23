@@ -23,7 +23,7 @@ OptParams optParse(int argc, const char** argv)
   // The parser with the multiple option arguments. They are composed
   // together by the "|" operator.
   auto cli = lyra::help(showHelp)
-             .description(cFrac::ProgramName + " (" + PROJECT_STR + ")")
+             .description(cFrac::ProgramName + " (" + EXE_STR + ")")
       | lyra::opt(showVersion)
             ["-v"]["--version"]("Version")
       | lyra::opt(myArgs.optDemo)
@@ -53,7 +53,7 @@ OptParams optParse(int argc, const char** argv)
   }
 
   if (showVersion) {
-    std::cout << "Program: " << cFrac::ProgramName << " (" << PROJECT_STR << ')' << '\n';
+    std::cout << "Program: " << cFrac::ProgramName << " (" << EXE_STR << ')' << '\n';
     std::cout << "Version: " << cFrac::Version << "\n\n";
   }
   

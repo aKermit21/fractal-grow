@@ -1,10 +1,10 @@
 ---
-title: "exfra Intro"
-description: "exfra documentation"
+title: "cosfra Intro"
+description: "cosfra documentation"
 ---
 
-**exfra**: **Cosmic Fractal — 2D Animation, Game** 
-more descriptive name: ****Ex***ponentially Growing ***Fra***ctal Leaf*
+**cosfra**: **Cosmic Fractal — 2D Animation, Game** 
+
 [GitHub repo](https://github.com/aKermit21/fractal-grow/)
 
 # Principle of animation 🎬
@@ -21,4 +21,9 @@ Catching light happens when light rays (illustrated when the light source is in 
 It is up to the player to manipulate the light source while the fractal structure is growing. This is done using the arrow keys.
 
 Since a stem usually has different colors on its two ends, the intermediate color matters. This is represented by a color flag pointing to the middle of the stem.
+
+::: callout info "Note on Naming"
+- Cosmic-fractal: GitHub repo name, Meson (C++) project name;
+- cosfra: binary, config, package name.
+:::
 

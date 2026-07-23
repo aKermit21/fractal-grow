@@ -1,7 +1,9 @@
-project('fractal-grow', 'cpp',
-  version : '0.7.1',
+project('Cosmic-fractal', 'cpp',
+  version : '0.8.0',
   default_options : ['warning_level=3', 'cpp_std=c++17',
                      'buildtype=release', 'b_ndebug=if-release'])
+                  
+my_exe = 'cosfra'
 
 my_src = [
  'src/aux_func.cpp',
@@ -36,6 +38,7 @@ my_src = [
 conf_data = configuration_data()
 conf_data.set('my_project', meson.project_name())
 conf_data.set('proj_version', meson.project_version())
+conf_data.set('my_exe', my_exe)
 configure_file(input : 'src/config.h.in',
                output : 'config.h',
                configuration : conf_data)
@@ -59,7 +62,7 @@ sfml3_dep = dependency('sfml-window', version : '>=3.0.0')
 
 sfml_all_dep = [ sfml1_dep, sfml2_dep, sfml3_dep ]
 
-executable('exfra', sources : my_src,
+executable(my_exe, sources : my_src,
              dependencies : [sfml_all_dep, lyra_dep, tomlplusplus_dep],
              install : true)
 
@@ -67,7 +70,7 @@ executable('exfra', sources : my_src,
 install_data('fonts/text_fonts.ttf')
 
 # Initial toml file with set of configs
-install_data('config/fractal-grow-cfg.toml')
+install_data('config/cosfra-cfg.toml')
 
 # Other images to be loaded manually to the same directory
 install_data('image/Galaxy.jpg')

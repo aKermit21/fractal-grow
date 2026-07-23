@@ -1,7 +1,7 @@
-# fractal-grow
+# Cosmic Fractal
 **Cosmic Fractal — 2D Animation, Game**
 
-more descriptive name: *Exponentially Growing Fractal Leaf*
+more descriptive name: *Exponentially Growing Fractal Leaf* 
 
 # Principle
 Elements of a leaf-shaped fractal are drawn recursively by applying a defined transformation that turns the largest element into progressively smaller ones.
@@ -95,7 +95,7 @@ This builds the package and installs it with all required dependencies.
 ### Get the Project
 Clone the GitHub project:
 ```shell
-git clone https://github.com/aKermit21/fractal-grow.git
+git clone https://github.com/aKermit21/Cosmic-fractal.git
 ```
 
 ### Compilation
@@ -108,7 +108,7 @@ mkdir build-release/
 meson setup build-release/
 cd build-release/
 meson compile
-./exfra [-h]   # to run the app directly from the build directory
+./cosfra [-h]   # to run the app directly from the build directory
 ```
 
 ### Optional: Explicit Installation of Program, Dependent Libraries, and Files in the System
@@ -136,7 +136,7 @@ meson setup build-lib/
 cd build-lib/
 meson install
 [sudo ldconfig]   # update library cache
-exfra [-h]     # now shall run from any location
+cosfra [-h]     # now shall run from any location
 ```
 Note that adding a custom library path may then be needed.
 
@@ -144,12 +144,12 @@ Note that adding a custom library path may then be needed.
 
 To check available options:
 ```shell
-[./]exfra --help
+[./]cosfra --help
 ```
 
 It might be worth trying the demo:
 ```shell
-[./]exfra --demo
+[./]cosfra --demo
 ```
 
 If animation flickers—which can happen on slow machines—increase

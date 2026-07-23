@@ -56,7 +56,7 @@ mkdir build-release/
 meson setup build-release/
 cd build-release/
 meson compile
-./exfra [-h]   # to run the app directly from the build directory
+./cosfra [-h]   # to run the app directly from the build directory
 ```
 
 ### Optional: Explicit Installation of Program, Dependent Libraries, and Files in the System 
@@ -84,7 +84,7 @@ meson setup build-lib/
 cd build-lib/
 meson install
 [sudo ldconfig]   # update library cache
-exfra [-h]     # now shall run from any location
+cosfra [-h]     # now shall run from any location
 ```
 Note that adding a custom library path may then be needed.
 

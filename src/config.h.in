@@ -7,6 +7,8 @@
 // fill manually below two strings and rename file to config.h
 # define PROJECT_STR "@my_project@"
 # define VERSION_STR "@proj_version@"
+// Executable as well as short program name
+# define EXE_STR "@my_exe@"
 
 inline constexpr std::string_view cFullProgramName { "Cosmic Fractal" };
 // Old descriptive name - "Exponentially Growing Fractal Leaf"};
@@ -20,31 +22,31 @@ namespace cPath {
   inline constexpr std::array<std::string_view, 5> cFontSubdirs = {{
     "fonts/", "../fonts/",
     // linux standard user installation of data by meson using --prefix $HOME/.local
-    "$HOME/.local/share/" PROJECT_STR "/", 
+    "$HOME/.local/share/" EXE_STR "/", 
     // linux standard system installation of data
     // (package manager vs localy installed)
-    "/usr/share/"  PROJECT_STR  "/", 
-    "/usr/local/share/"  PROJECT_STR  "/" }}; 
+    "/usr/share/"  EXE_STR  "/", 
+    "/usr/local/share/"  EXE_STR  "/" }}; 
   
   // Default snapshot / configuration file
-  inline constexpr std::string_view cDefaultSnapshot { PROJECT_STR "-cfg.toml"};
+  inline constexpr std::string_view cDefaultSnapshot { EXE_STR "-cfg.toml"};
   
   // Possible locations of config file (otherwise current directory)
   inline constexpr std::array<std::string_view, 5> cLogSubdirs = {{
     "config/", "../config/",
     // linux standard user installation of data by meson using --prefix $HOME/.local
-    "$HOME/.local/share/" PROJECT_STR "/",
+    "$HOME/.local/share/" EXE_STR "/",
     // linux standard system installation of data
-    "/usr/share/"  PROJECT_STR  "/", 
-    "/usr/local/share/"  PROJECT_STR  "/" }}; 
+    "/usr/share/"  EXE_STR  "/", 
+    "/usr/local/share/"  EXE_STR  "/" }}; 
 
   // Possible locations of image files (otherwise current directory)
   inline constexpr std::array<std::string_view, 5> cImageSubdirs = {{
     // linux standard user installation of data by meson using --prefix $HOME/.local
-    "$HOME/.local/share/" PROJECT_STR "/",
+    "$HOME/.local/share/" EXE_STR "/",
     // linux standard system (global) installation of data
-    "/usr/share/"  PROJECT_STR  "/", 
-    "/usr/local/share/"  PROJECT_STR  "/",
+    "/usr/share/"  EXE_STR  "/", 
+    "/usr/local/share/"  EXE_STR  "/",
     "image/", "../image/" }};
 }
 

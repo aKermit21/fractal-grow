@@ -27,7 +27,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # Find latest version
-if response=$(curl -s --max-time 5 "https://api.github.com/repos/aKermit21/fractal-grow/releases/latest"); then
+if response=$(curl -s --max-time 5 "https://api.github.com/repos/aKermit21/Cosmic-fractal/releases/latest"); then
     version=$(echo "$response" | grep '"tag_name"' | cut -d'"' -f4 )
     if [ -n "$version" ]; then
         # echo "$response"
@@ -44,9 +44,9 @@ else
 fi
   
 # Long application name
-appl=fractal-grow
-# Binary, packet, short application name
-binary=exfra
+appl=Cosmic-fractal
+# Binary, package, short application name age
+binary=cosfra
 arch=$(uname -m)
 os=$(uname -s)
 
@@ -73,21 +73,36 @@ fi
 
 file_name=${binary}_${version}_${os}_${arch}
 
-# My Github URL for binaries (v0.5.0):
-# https://github.com/aKermit21/fractal-grow/releases/download/v0.5.0/exfra_v0.5.0_linux_64-bit.tar.gz 
-# My project URL for additional background images
+# My example Github URL for binaries (v0.5.0):
+# https://github.com/aKermit21/Cosmic-fractal/releases/download/v0.8.0/cosfra_v0.8.0_linux_64-bit.tar.gz 
+# My project URL for additional background images, ex:
 # https://pcc21.com/upload/store/ny_city.jpg
 
-url="https://github.com/aKermit21/fractal-grow/releases/download/${version}/${file_name}.tar.gz"
+url="https://github.com/aKermit21/Cosmic-fractal/releases/download/${version}/${file_name}.tar.gz"
 url_store="https://pcc21.com/upload/store"
 
 images_from_store=("burj_khalifa.jpg" "ny_city.jpg")
 
 echo -e "${bright_yellow}Downloading ${cyan}${appl} ${version} for ${os} ...${nc}"
-curl -sLO "$url"
+curl -sLO --max-time 5 "$url"
+
+# Verify file exists and its real - not just error message (too short)
+if [ ! -f "${file_name}.tar.gz" ]; then
+    echo -e "${red}❌ Failed to download file ${file_name}.tar.gz !${nc}"
+    exit 1
+elif [ "$(wc -c < "${file_name}.tar.gz")" -lt 100 ]; then
+    echo -e "${red}❌ Looks downloaded file ${file_name}.tar.gz contains Error message:${nc}"
+    cat "${file_name}.tar.gz"
+    exit 1
+fi
 
 echo -e "${bright_yellow}Extracting ${cyan}${appl} files...${nc}"
-tar -xzf "${file_name}.tar.gz"
+if tar -xzf "${file_name}.tar.gz"; then
+    echo -e "${green}   Extracted.${nc}"
+else
+    echo -e "${red}❌ Failed to extract file ${file_name}.tar.gz !${nc}"
+    exit 1
+fi
 
 # Choose type of installation
 
@@ -132,25 +147,28 @@ echo Using PREFIX=$PREFIX
 $SUDO install -Dm755 ${binary} "$PREFIX/bin/${binary}"
 
 # Install basic supporting files
-$SUDO mkdir -p $PREFIX/share/${appl}/
+$SUDO mkdir -p $PREFIX/share/${binary}/
 # all from GitHub page
-$SUDO install -Dm644  text_fonts.ttf ${appl}-cfg.toml Galaxy.jpg Moon.jpg Earth.jpg LICENSE-fonts.txt "$PREFIX/share/${appl}/"
-$SUDO mkdir -p $PREFIX/share/licenses/${appl}/
-$SUDO install -Dm644  LICENSE LICENSE-fonts.txt  "$PREFIX/share/licenses/${appl}/"
+$SUDO install -Dm644  text_fonts.ttf ${binary}-cfg.toml Galaxy.jpg Moon.jpg Earth.jpg LICENSE-fonts.txt "$PREFIX/share/${binary}/"
+$SUDO mkdir -p $PREFIX/share/licenses/${binary}/
+$SUDO install -Dm644  LICENSE LICENSE-fonts.txt  "$PREFIX/share/licenses/${binary}/"
 
 # Additional Pictures fetched directly from dedicated project/store url
 echo -e "${bright_yellow}Fetching ${cyan}additional ${appl} pictures...${nc}"
 
 #Additional Pictures placement
 for image in "${images_from_store[@]}"; do
-    echo "$image"
+    echo "${bright_blue}  $image${nc}$"
     license=LICENSE_"${image%.jpg}.txt"
-    echo "$license"
+    echo "${blue}  $license"
     curl -sLO "$url_store/$image"
     curl -sLO "$url_store/$license"
-
-    $SUDO install -Dm644  $image $license "$PREFIX/share/${appl}/"
-    $SUDO install -Dm644  $license  "$PREFIX/share/licenses/${appl}/"
+    if [ $? -eq 0 ]; then
+        $SUDO install -Dm644  $image $license "$PREFIX/share/${binary}/"
+        $SUDO install -Dm644  $license  "$PREFIX/share/licenses/${binary}/"
+    else
+        echo "${red}Failed: curl returned error code while loading additional picture $? ${nc}"
+    fi
 done
 
 
@@ -174,6 +192,6 @@ if [[ $INSTALL_TYPE == local ]]; then
 fi
 
 echo -e "🎉 ${bright_green}Installation complete!${nc}"
-echo -e "${bright_cyan}You can type ${white}\"${bright_yellow}exfra${white}\" ${bright_cyan}to start!${nc}"
+echo -e "${bright_cyan}You can type ${white}\"${bright_yellow}cosfra${white}\" ${bright_cyan}to start!${nc}"
 
 rm -rf "$temp_dir"

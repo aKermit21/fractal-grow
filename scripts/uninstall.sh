@@ -20,11 +20,15 @@ echo -e "${green}------------------------------"
 echo -e " Cosmic Fractal - Uninstaller"
 echo -e "------------------------------${nc}"
 
-appl=fractal-grow
-binary=exfra
+appl=Cosmic-fractal
+binary=cosfra
 arch=$(uname -m)
 os=$(uname -s)
-version=0.4.0
+
+# Try to remove also applications under previous naming
+old_appl=fractal-grow
+old_binary=exfra
+
 
 # Verify 64bit architecture
 if [[ "$arch" == "x86_64" || "$arch" == "amd64" ]]; then
@@ -52,10 +56,20 @@ PREFIX="$HOME/.local"
 SUDO=""
 
 $SUDO rm -f "$PREFIX/bin/${binary}"
+$SUDO rm -f "$PREFIX/bin/${old_binary}"
 # Uninstall also supporting files
-if [ -n "$appl" ]; then
+if [ -n "$binary" ]; then
+    # Safety check that binary is Non-empty 
+    # binary is also a short name of application
+    $SUDO rm -rf $PREFIX/share/${binary}/
+else
+    echo -e "${red}❌ Error in script: ${yellow}Not defined appl.${nc}"
+    exit 1
+fi
+# old naming
+if [ -n "$old_appl" ]; then
     # Safety check that appl is Non-empty 
-    $SUDO rm -rf $PREFIX/share/${appl}/
+    $SUDO rm -rf $PREFIX/share/${old_appl}/
 else
     echo -e "${red}❌ Error in script: ${yellow}Not defined appl.${nc}"
     exit 1
@@ -66,10 +80,21 @@ PREFIX="/usr/local"
 SUDO="sudo"
 
 $SUDO rm -f "$PREFIX/bin/${binary}"
+$SUDO rm -f "$PREFIX/bin/${old_binary}"
 # Uninstall also supporting files
-if [ -n "$appl" ]; then
+# Uninstall also supporting files
+if [ -n "$binary" ]; then
+    # Safety check that binary is Non-empty 
+    # binary is also a short name of application
+    $SUDO rm -rf $PREFIX/share/${binary}/
+else
+    echo -e "${red}❌ Error in script: ${yellow}Not defined appl.${nc}"
+    exit 1
+fi
+# old naming
+if [ -n "$old_appl" ]; then
     # Safety check that appl is Non-empty 
-    $SUDO rm -rf $PREFIX/share/${appl}/
+    $SUDO rm -rf $PREFIX/share/${old_appl}/
 else
     echo -e "${red}❌ Error in script: ${yellow}Not defined appl.${nc}"
     exit 1
