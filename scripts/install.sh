@@ -158,16 +158,16 @@ echo -e "${bright_yellow}Fetching ${cyan}additional ${appl} pictures...${nc}"
 
 #Additional Pictures placement
 for image in "${images_from_store[@]}"; do
-    echo "${bright_blue}  $image${nc}$"
+    echo -e "${bright_blue}  ${image}${nc}"
     license=LICENSE_"${image%.jpg}.txt"
-    echo "${blue}  $license"
+    # echo -e "${blue}  ${license}${nc}"
     curl -sLO "$url_store/$image"
     curl -sLO "$url_store/$license"
     if [ $? -eq 0 ]; then
         $SUDO install -Dm644  $image $license "$PREFIX/share/${binary}/"
         $SUDO install -Dm644  $license  "$PREFIX/share/licenses/${binary}/"
     else
-        echo "${red}Failed: curl returned error code while loading additional picture $? ${nc}"
+        echo -e "${red}Failed: curl returned error code while loading additional picture $? ${nc}"
     fi
 done
 
